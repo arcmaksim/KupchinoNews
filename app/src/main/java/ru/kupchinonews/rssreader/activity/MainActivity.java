@@ -21,7 +21,6 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -106,12 +105,12 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
     @Override
     public void onProviderEnabled(String provider) {
-        Toast.makeText(this, "Enabled new provider " + mProvider, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Enabled new provider " + mProvider, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onProviderDisabled(String provider) {
-        Toast.makeText(this, "Disabled provider " + mProvider, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Disabled provider " + mProvider, Toast.LENGTH_SHORT).show();
     }
 
     public double getLat() {

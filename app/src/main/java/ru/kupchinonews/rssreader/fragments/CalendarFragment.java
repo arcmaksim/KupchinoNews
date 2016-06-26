@@ -125,6 +125,7 @@ public class CalendarFragment extends Fragment{
             public void onDateClick(@NonNull Date date) {
                 mCalendarView.setDateAsSelected(date);
                 mTextView.setText(Events.getDateEventData(date));
+                mCalendarView.updateTitleLayout(date.getDate());
             }
         });
 
@@ -223,7 +224,7 @@ public class CalendarFragment extends Fragment{
             if (calendar != null) {
                 Events.get().setEvents(items);
             } else {
-                Toast.makeText(getActivity(), "Возникла проблема при загрузке календаря", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), getString(R.string.calendar_error), Toast.LENGTH_LONG).show();
             }
 
             prepareEvents();

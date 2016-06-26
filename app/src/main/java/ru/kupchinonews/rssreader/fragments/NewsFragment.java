@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.ResultReceiver;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,7 @@ public class NewsFragment extends Fragment implements AdapterView.OnItemClickLis
     private ProgressBar mProgressBar;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private ListView listView;
+    private RecyclerView mRecyclerView;
     private TextView mNoInternetTextView;
     private View view;
     private MainActivity act;
@@ -64,6 +66,10 @@ public class NewsFragment extends Fragment implements AdapterView.OnItemClickLis
             mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swiperefresh);
             mSwipeRefreshLayout.setOnRefreshListener(this);
             mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
+            //mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+            //mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            //mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+            //mRecyclerView.setOnScrollChangeListener();
             listView = (ListView) view.findViewById(R.id.listView);
             listView.setOnItemClickListener(this);
             listView.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -121,21 +127,22 @@ public class NewsFragment extends Fragment implements AdapterView.OnItemClickLis
         @SuppressWarnings("unchecked")
         @Override
         protected void onReceiveResult(int resultCode, Bundle resultData) {
-            //act.setCalendar((Calendar) resultData.getSerializable(RssService.CALENDAR));
             ArrayList<NewsItem> items = (ArrayList<NewsItem>) resultData.getSerializable(RssService.NEWS);
 
             if (items != null) {
                 News.get().setNews(items);
                 mAdapter = new NewsAdapter(getActivity(), items, act);
                 listView.setAdapter(mAdapter);
+                //mRecyclerView.setAdapter(new NewsAdapter2(items));
             } else {
-                Toast.makeText(getActivity(), "Возникла проблема при загрузке RSS ленты", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), getString(R.string.rss_error), Toast.LENGTH_LONG).show();
             }
 
             act.initFlags(items.size());
 
             mProgressBar.setVisibility(View.GONE);
             listView.setVisibility(View.VISIBLE);
+            //mRecyclerView.setVisibility(View.VISIBLE);
             getActivity().stopService(new Intent(getActivity(), RssService.class));
             if(mSwipeRefreshLayout.isRefreshing())
                 mSwipeRefreshLayout.setRefreshing(false);
@@ -146,14 +153,13 @@ public class NewsFragment extends Fragment implements AdapterView.OnItemClickLis
     public void onRefresh() {
         mSwipeRefreshLayout.setRefreshing(true);
         if (!act.hasInternet()) {
-            Toast.makeText(getActivity(), "Отсутствует подключение к интернету", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), getString(R.string.no_internet), Toast.LENGTH_LONG).show();
+            mSwipeRefreshLayout.setRefreshing(false);
         } else {
             mProgressBar.setVisibility(View.VISIBLE);
             listView.setVisibility(View.GONE);
+            //mRecyclerView.setVisibility(View.GONE);
             startService();
         }
     }
-
-
-
 }

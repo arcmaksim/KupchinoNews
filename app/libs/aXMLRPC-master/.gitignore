@@ -1,8 +1,0 @@
-nbproject/
-build/
-dist/
-.gradle/
-/.nb-gradle/private/
-target
-.classpath
-.project

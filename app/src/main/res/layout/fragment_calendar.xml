@@ -17,7 +17,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <com.samsistemas.calendarview.widget.CalendarView android:id="@+id/calendar_view"
+            <com.samsistemas.calendarview.widget.CalendarView
+                android:id="@+id/calendar_view"
                 android:visibility="gone"
                 android:layout_marginEnd="2dp"
                 android:layout_marginLeft="2dp"
