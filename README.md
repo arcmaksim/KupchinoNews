@@ -4,9 +4,9 @@
 Cleaning and rebuilding project. Migrating to Kotlin.
 
 ### Supported versions of Android
-- Minimum: Android 4.1.x (API 16)
+- Minimum: Android 4.0.x (API 15)
 - Target: Android 7.0 (API 24) <br />
-Note: no need to support devices with API 15 and earlier
+Note: no need to support devices with API 14 and earlier
 
 ### Dependencies
 - commons-lang3-3.4.jar
