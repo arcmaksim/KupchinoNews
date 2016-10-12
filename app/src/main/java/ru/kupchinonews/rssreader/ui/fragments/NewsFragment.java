@@ -1,4 +1,4 @@
-package ru.kupchinonews.rssreader.fragments;
+package ru.kupchinonews.rssreader.ui.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -25,10 +25,11 @@ import ru.kupchinonews.rssreader.News;
 import ru.kupchinonews.rssreader.NewsAdapter;
 import ru.kupchinonews.rssreader.NewsItem;
 import ru.kupchinonews.rssreader.R;
-import ru.kupchinonews.rssreader.activity.MainActivity;
+import ru.kupchinonews.rssreader.ui.activity.MainActivity;
 import ru.kupchinonews.rssreader.services.RssService;
 
 public class NewsFragment extends Fragment implements AdapterView.OnItemClickListener, SwipeRefreshLayout.OnRefreshListener {
+
     private ProgressBar mProgressBar;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private ListView listView;

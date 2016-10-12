@@ -1,4 +1,4 @@
-package ru.kupchinonews.rssreader;
+package ru.kupchinonews.rssreader.adapters;
 
 import android.content.Context;
 import android.text.Html;
@@ -11,8 +11,10 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import ru.kupchinonews.rssreader.activity.BaseActivity;
-import ru.kupchinonews.rssreader.activity.MainActivity;
+import ru.kupchinonews.rssreader.NewsItem;
+import ru.kupchinonews.rssreader.R;
+import ru.kupchinonews.rssreader.ui.activity.BaseActivity;
+import ru.kupchinonews.rssreader.ui.activity.MainActivity;
 
 public class NewsAdapter extends ArrayAdapter<NewsItem> {
 

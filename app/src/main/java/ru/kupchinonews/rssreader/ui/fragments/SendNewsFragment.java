@@ -1,4 +1,4 @@
-package ru.kupchinonews.rssreader.fragments;
+package ru.kupchinonews.rssreader.ui.fragments;
 
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -30,8 +30,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 
 import ru.kupchinonews.rssreader.R;
-import ru.kupchinonews.rssreader.activity.BaseActivity;
-import ru.kupchinonews.rssreader.activity.MainActivity;
+import ru.kupchinonews.rssreader.ui.activity.BaseActivity;
+import ru.kupchinonews.rssreader.ui.activity.MainActivity;
 
 public class SendNewsFragment extends Fragment implements View.OnClickListener {
     private View view;

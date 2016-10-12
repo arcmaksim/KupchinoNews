@@ -1,4 +1,4 @@
-package ru.kupchinonews.rssreader.fragments;
+package ru.kupchinonews.rssreader.ui.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -31,8 +31,8 @@ import java.util.Locale;
 import ru.kupchinonews.rssreader.CalendarItem;
 import ru.kupchinonews.rssreader.Events;
 import ru.kupchinonews.rssreader.R;
-import ru.kupchinonews.rssreader.activity.BaseActivity;
-import ru.kupchinonews.rssreader.activity.MainActivity;
+import ru.kupchinonews.rssreader.ui.activity.BaseActivity;
+import ru.kupchinonews.rssreader.ui.activity.MainActivity;
 import ru.kupchinonews.rssreader.services.CalendarService;
 
 public class CalendarFragment extends Fragment{

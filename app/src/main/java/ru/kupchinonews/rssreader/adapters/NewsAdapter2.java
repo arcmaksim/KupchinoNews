@@ -1,4 +1,4 @@
-package ru.kupchinonews.rssreader;
+package ru.kupchinonews.rssreader.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,7 +10,9 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import ru.kupchinonews.rssreader.activity.BaseActivity;
+import ru.kupchinonews.rssreader.NewsItem;
+import ru.kupchinonews.rssreader.R;
+import ru.kupchinonews.rssreader.ui.activity.BaseActivity;
 
 public class NewsAdapter2 extends RecyclerView.Adapter<NewsAdapter2.ViewHolder> implements View.OnClickListener{
 

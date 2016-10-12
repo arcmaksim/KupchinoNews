@@ -1,4 +1,4 @@
-package ru.kupchinonews.rssreader;
+package ru.kupchinonews.rssreader.models;
 
 import android.graphics.drawable.Drawable;
 
