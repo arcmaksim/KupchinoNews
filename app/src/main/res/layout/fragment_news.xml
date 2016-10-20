@@ -1,50 +1,40 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
-    android:background="@color/white"
-    android:orientation="vertical"
-    android:fitsSystemWindows="true"
-    tools:context="ru.kupchinonews.rssreader.fragments.NewsFragment">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swiperefresh"
+        android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ListView
-                android:visibility="gone"
-                android:id="@+id/listView"
-                android:dividerHeight="2dp"
-                android:divider="@drawable/divider"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:smoothScrollbar="true"
-                android:scrollingCache="false"
-                android:animationCache="false" />
+                android:dividerHeight="1dp"
+                android:divider="@android:color/black"
+                android:visibility="gone"/>
 
             <ProgressBar
-                android:visibility="gone"
                 android:id="@+id/progressBar"
                 style="?android:attr/progressBarStyleLarge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true" />
+                android:layout_centerInParent="true"
+                android:visibility="gone"/>
 
             <TextView
-                android:visibility="gone"
-                android:text="@string/no_internet"
-                android:id="@+id/no_internet_text_view"
+                android:id="@+id/errorTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true" />
+                android:layout_centerInParent="true"
+                android:text="No internet connection"/>
 
         </RelativeLayout>
 

@@ -1,11 +1,3 @@
 <resources>
-    <string name="app_name">Новости Купчино</string>
-
-    <string name="title_activity_news">Новости Купчино</string>
-    <string name="detail_view_button_text">Подробнее</string>
-
-    <string name="no_internet">Отсутствует подключение к интернету</string>
-    <string name="rss_error">Возникла проблема при загрузке RSS ленты</string>
-    <string name="calendar_error">Возникла проблема при загрузке календаря</string>
-
+    <string name="app_name">KupchinoNews</string>
 </resources>
