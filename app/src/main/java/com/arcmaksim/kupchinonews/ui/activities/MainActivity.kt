@@ -28,6 +28,8 @@ class MainActivity : AppCompatActivity(){
         viewPager.offscreenPageLimit = 2
         setupViewPager(viewPager)
         tabLayout.setupWithViewPager(viewPager)
+
+        supportActionBar?.elevation = 0F
     }
 
     private fun setupViewPager(viewPager: ViewPager) {

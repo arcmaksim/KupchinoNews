@@ -5,6 +5,7 @@ import android.net.ConnectivityManager
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
+import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.LayoutInflater
@@ -43,13 +44,13 @@ class NewsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         super.onActivityCreated(savedInstanceState)
 
         swipeRefresh.setColorSchemeResources(R.color.colorPrimary)
-        recyclerView.layoutManager = LinearLayoutManager(activity)
+        val layoutManager = LinearLayoutManager(activity)
+        recyclerView.layoutManager = layoutManager
+        val dividerItemDecoration = DividerItemDecoration(recyclerView.getContext(),
+                layoutManager.getOrientation())
+        recyclerView.addItemDecoration(dividerItemDecoration)
 
-        if(isNetworkAvailable()) {
-            getNews()
-        } else {
-            errorTextView.visibility = View.VISIBLE
-        }
+        if(isNetworkAvailable()) getNews() else errorTextView.visibility = View.VISIBLE
     }
 
     private fun getNews() {
@@ -103,5 +104,8 @@ class NewsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         swipeRefresh.isRefreshing = false
     }
 
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+    }
 }
 

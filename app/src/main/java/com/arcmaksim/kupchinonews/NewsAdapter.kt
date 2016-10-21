@@ -69,8 +69,6 @@ class NewsAdapter(internal var mNews: ArrayList<NewsItem>) : RecyclerView.Adapte
 
     }
 
-
-
     private fun switch(position: Int) {
         mViewStates[position] = !mViewStates[position]
         notifyDataSetChanged()

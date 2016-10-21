@@ -1,22 +1,22 @@
 package com.arcmaksim.kupchinonews
 
+import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.util.Xml
-
+import com.nostra13.universalimageloader.core.ImageLoader
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserException
-
 import java.io.IOException
 import java.io.InputStream
-import java.net.URL
 import java.text.DateFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.util.ArrayList
-import java.util.Date
-import java.util.Locale
+import java.util.*
 
 class NewsParser {
+
+    private val bitmaps = HashMap<String, Bitmap?>()
+    private var isDoneLoadingImages = false
 
     private val ns: String? = null
     private val fTitle = "title"
@@ -50,6 +50,7 @@ class NewsParser {
 
     @Throws(XmlPullParserException::class, IOException::class)
     private fun readFeed(parser: XmlPullParser): ArrayList<NewsItem> {
+
         parser.require(XmlPullParser.START_TAG, null, "rss")
         var title: String = ""
         var link: String = ""
@@ -60,9 +61,11 @@ class NewsParser {
         var lock = true
         val items = ArrayList<NewsItem>()
         var isEnd = false
+        val imageLoader = ImageLoader.getInstance()
+
         while (parser.next() != XmlPullParser.END_DOCUMENT) {
 
-            if(parser.eventType == XmlPullParser.END_TAG && parser.name == "item") {
+            if (parser.eventType == XmlPullParser.END_TAG && parser.name == "item") {
                 if (isEnd) {
                     items.add(NewsItem(title, link, description, pubDate, creator, image))
                     image = null
@@ -80,14 +83,15 @@ class NewsParser {
                     fDescription -> {
                         description = readTag(parser, fDescription)
 
-                        /*val asd = description.indexOf(fImageStartTag)
+                        val asd = description.indexOf(fImageStartTag)
                         if (asd != -1) {
                             val url = description.substring(description.indexOf(fImageStartTag) + fImageStartTag.length,
                                     description.indexOf(fDescriptionTitleFinishTag))
+
                             //image = LoadImageFromWebOperations(url)
                         } else {
                             //image = null
-                        }*/
+                        }
 
                         image = null
 
@@ -119,6 +123,10 @@ class NewsParser {
                 image = null
             }*/
         }
+
+        while (isDoneLoadingImages) {
+        }
+
         return items
     }
 
@@ -133,10 +141,11 @@ class NewsParser {
     @Throws(IOException::class, XmlPullParserException::class)
     private fun readText(parser: XmlPullParser): String {
         var result = ""
-        if (parser.next() == XmlPullParser.TEXT) {
+        if(parser.next() == XmlPullParser.TEXT) {
             result = parser.text
             parser.nextTag()
         }
         return result
     }
+
 }
