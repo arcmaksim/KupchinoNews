@@ -1,6 +1,8 @@
 package com.arcmaksim.kupchinonews
 
+import android.support.transition.Scene
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +13,8 @@ import java.util.*
 class NewsAdapter(internal var mNews: ArrayList<NewsItem>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
+        @JvmStatic private val TAG: String = NewsAdapter::class.java.simpleName
+
         const private val news_simple = 0
         const private val news_detailed = 1
     }
@@ -41,36 +45,36 @@ class NewsAdapter(internal var mNews: ArrayList<NewsItem>) : RecyclerView.Adapte
         return mNews.size
     }
 
-    inner class SimpleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    inner class SimpleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         private var itemPosition: Int = 0
 
         fun bindView(position: Int) {
-            itemView.newsHeader.text = mNews[position].title
+            itemView.newsHeader.text = mNews[position].mTitle
+            itemView.setOnClickListener { switch(itemPosition) }
             itemPosition = position
         }
-
-        override fun onClick(p0: View?) = switch(itemPosition)
 
     }
 
-    inner class DetailedViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    inner class DetailedViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         private var itemPosition: Int = 0
 
         fun bindView(position: Int) {
-            itemView.newsTitle.text = mNews[position].title
+            itemView.newsTitle.text = mNews[position].mTitle
             //itemImage.setImageResource(Recipes.resourceIds[position])
-            itemView.newsDescription.text = mNews[position].description
+            itemView.newsDescription.text = mNews[position].mDescription
+            itemView.setOnClickListener { switch(itemPosition) }
             itemPosition = position
         }
-
-        override fun onClick(p0: View?) = switch(itemPosition)
 
     }
 
     private fun switch(position: Int) {
         mViewStates[position] = !mViewStates[position]
+        //val transitionRoot = get
+        //val newScene = Scene.getSceneForLayout(,R.layout.item_detailed_news, )
         notifyDataSetChanged()
     }
 

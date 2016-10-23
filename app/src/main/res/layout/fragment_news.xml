@@ -30,7 +30,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="No internet connection"/>
+            android:text="No internet connection"
+            android:visibility="gone"/>
 
     </RelativeLayout>
 

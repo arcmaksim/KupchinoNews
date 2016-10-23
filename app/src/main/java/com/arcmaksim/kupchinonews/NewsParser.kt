@@ -1,7 +1,6 @@
 package com.arcmaksim.kupchinonews
 
 import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
 import android.util.Xml
 import com.nostra13.universalimageloader.core.ImageLoader
 import org.xmlpull.v1.XmlPullParser
@@ -57,7 +56,7 @@ class NewsParser {
         var description: String = ""
         var pubDate: String = ""
         var creator: String = ""
-        var image: Drawable? = null
+        var image: Bitmap? = null
         var lock = true
         val items = ArrayList<NewsItem>()
         var isEnd = false
@@ -117,9 +116,9 @@ class NewsParser {
                 if (parser.name == "item")
                     lock = false
             }
-            /*if (title != null && link != null && description != null && pubDate != null && creator != null) {
-                items.add(NewsItem(title, link, description, pubDate, creator, image))
-                //title = link = description = pubDate = creator = null
+            /*if (mTitle != null && link != null && description != null && pubDate != null && creator != null) {
+                items.add(NewsItem(mTitle, link, description, pubDate, creator, image))
+                //mTitle = link = description = pubDate = creator = null
                 image = null
             }*/
         }
