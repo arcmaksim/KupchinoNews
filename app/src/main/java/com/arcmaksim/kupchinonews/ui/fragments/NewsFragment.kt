@@ -24,6 +24,12 @@ import java.util.*
 
 class NewsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
+    companion object {
+        @JvmStatic val NEWS_LIST = "NEWS_LIST"
+    }
+
+    private lateinit var mNews: ArrayList<NewsItem>
+
     override fun onRefresh() {
         if(progressBar.visibility == View.GONE) {
             if(isNetworkAvailable()) {
@@ -44,13 +50,18 @@ class NewsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         super.onActivityCreated(savedInstanceState)
 
         swipeRefresh.setColorSchemeResources(R.color.colorPrimary)
+        swipeRefresh.isEnabled = false
+
         val layoutManager = LinearLayoutManager(activity)
         recyclerView.layoutManager = layoutManager
-        val dividerItemDecoration = DividerItemDecoration(recyclerView.getContext(),
-                layoutManager.getOrientation())
+        val dividerItemDecoration = DividerItemDecoration(recyclerView.context,
+                layoutManager.orientation)
         recyclerView.addItemDecoration(dividerItemDecoration)
 
-        if(isNetworkAvailable()) getNews() else errorTextView.visibility = View.VISIBLE
+        if(savedInstanceState != null && savedInstanceState.containsKey(NEWS_LIST)) {
+            mNews = savedInstanceState.getParcelableArrayList(NEWS_LIST)
+            updateDisplay(mNews)
+        } else if (isNetworkAvailable()) getNews() else errorTextView.visibility = View.VISIBLE
     }
 
     private fun getNews() {
@@ -73,10 +84,10 @@ class NewsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             override fun onResponse(call: Call?, response: Response?) {
                 try {
                     val rawNews = response?.body()?.byteStream()
-                    val news = NewsParser().parse(rawNews!!)
+                    mNews = NewsParser().parse(rawNews!!)
 
                     if(response?.isSuccessful!!) {
-                        activity.runOnUiThread { updateDisplay(news) }
+                        activity.runOnUiThread { updateDisplay(mNews) }
                     } else {
                         errorTextView.text = "Something wrong with receiving news"
                         errorTextView.visibility = View.VISIBLE
@@ -101,10 +112,11 @@ class NewsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         recyclerView.adapter = NewsAdapter(news)
         progressBar.visibility = View.GONE
         recyclerView.visibility = View.VISIBLE
-        swipeRefresh.isRefreshing = false
+        swipeRefresh.isEnabled = true
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
+        outState?.putParcelableArrayList(NEWS_LIST, mNews)
         super.onSaveInstanceState(outState)
     }
 }
