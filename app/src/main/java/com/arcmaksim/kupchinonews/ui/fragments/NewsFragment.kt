@@ -20,6 +20,7 @@ import com.arcmaksim.kupchinonews.ui.activities.MainActivity
 import kotlinx.android.synthetic.main.fragment_news.*
 import okhttp3.*
 import java.io.IOException
+import java.io.InputStream
 import java.util.*
 
 class NewsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
@@ -28,7 +29,7 @@ class NewsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         @JvmStatic val NEWS_LIST = "NEWS_LIST"
     }
 
-    private lateinit var mNews: ArrayList<NewsItem>
+    private var mNews: ArrayList<NewsItem>? = null
 
     override fun onRefresh() {
         if(progressBar.visibility == View.GONE) {
@@ -60,7 +61,7 @@ class NewsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
         if(savedInstanceState != null && savedInstanceState.containsKey(NEWS_LIST)) {
             mNews = savedInstanceState.getParcelableArrayList(NEWS_LIST)
-            updateDisplay(mNews)
+            updateDisplay(mNews as ArrayList<NewsItem>)
         } else if (isNetworkAvailable()) getNews() else errorTextView.visibility = View.VISIBLE
     }
 
@@ -83,11 +84,9 @@ class NewsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
             override fun onResponse(call: Call?, response: Response?) {
                 try {
-                    val rawNews = response?.body()?.byteStream()
-                    mNews = NewsParser(activity).parse(rawNews!!)
-
-                    if(response?.isSuccessful!!) {
-                        activity.runOnUiThread { updateDisplay(mNews) }
+                    if(response?.isSuccessful as Boolean) {
+                        mNews = NewsParser(activity).parse(response?.body()?.byteStream() as InputStream)
+                        activity.runOnUiThread { updateDisplay(mNews as ArrayList<NewsItem>) }
                     } else {
                         errorTextView.text = "Something wrong with receiving news"
                         errorTextView.visibility = View.VISIBLE
@@ -116,7 +115,9 @@ class NewsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
-        outState?.putParcelableArrayList(NEWS_LIST, mNews)
+        if(mNews != null) {
+            outState?.putParcelableArrayList(NEWS_LIST, mNews)
+        }
         super.onSaveInstanceState(outState)
     }
 }
