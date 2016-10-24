@@ -1,8 +1,10 @@
 package com.arcmaksim.kupchinonews
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.util.Xml
-import com.nostra13.universalimageloader.core.ImageLoader
+import com.squareup.picasso.Picasso
+import org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserException
 import java.io.IOException
@@ -11,8 +13,9 @@ import java.text.DateFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.regex.Pattern
 
-class NewsParser {
+class NewsParser(private var mContext: Context) {
 
     private val bitmaps = HashMap<String, Bitmap?>()
     private var isDoneLoadingImages = false
@@ -60,7 +63,6 @@ class NewsParser {
         var lock = true
         val items = ArrayList<NewsItem>()
         var isEnd = false
-        val imageLoader = ImageLoader.getInstance()
 
         while (parser.next() != XmlPullParser.END_DOCUMENT) {
 
@@ -82,19 +84,18 @@ class NewsParser {
                     fDescription -> {
                         description = readTag(parser, fDescription)
 
-                        val asd = description.indexOf(fImageStartTag)
+                        /*val asd = description.indexOf(fImageStartTag)
                         if (asd != -1) {
                             val url = description.substring(description.indexOf(fImageStartTag) + fImageStartTag.length,
                                     description.indexOf(fDescriptionTitleFinishTag))
+                            image = Picasso.with(mContext).load(url).get()
+                        }*/
 
-                            //image = LoadImageFromWebOperations(url)
-                        } else {
-                            //image = null
-                        }
+                        description = unescapeHtml4(description.replace(fDivTag.toRegex(), "").replace(fTagMask.toRegex(), ""))
 
-                        image = null
-
-                        description = description.replace(fDivTag.toRegex(), "").replace(fTagMask.toRegex(), "")
+                        val m = Pattern.compile("\\p{Cntrl}").matcher("")
+                        m.reset(description)
+                        description = m.replaceAll("").trim()
                     }
 
                     fPubDate -> {
@@ -116,14 +117,6 @@ class NewsParser {
                 if (parser.name == "item")
                     lock = false
             }
-            /*if (mTitle != null && link != null && description != null && pubDate != null && creator != null) {
-                items.add(NewsItem(mTitle, link, description, pubDate, creator, image))
-                //mTitle = link = description = pubDate = creator = null
-                image = null
-            }*/
-        }
-
-        while (isDoneLoadingImages) {
         }
 
         return items
@@ -140,7 +133,7 @@ class NewsParser {
     @Throws(IOException::class, XmlPullParserException::class)
     private fun readText(parser: XmlPullParser): String {
         var result = ""
-        if(parser.next() == XmlPullParser.TEXT) {
+        if (parser.next() == XmlPullParser.TEXT) {
             result = parser.text
             parser.nextTag()
         }

@@ -49,7 +49,7 @@ class NewsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        swipeRefresh.setColorSchemeResources(R.color.colorPrimary)
+        swipeRefresh.setColorSchemeResources(R.color.colorAccent)
         swipeRefresh.isEnabled = false
 
         val layoutManager = LinearLayoutManager(activity)
@@ -84,7 +84,7 @@ class NewsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             override fun onResponse(call: Call?, response: Response?) {
                 try {
                     val rawNews = response?.body()?.byteStream()
-                    mNews = NewsParser().parse(rawNews!!)
+                    mNews = NewsParser(activity).parse(rawNews!!)
 
                     if(response?.isSuccessful!!) {
                         activity.runOnUiThread { updateDisplay(mNews) }
