@@ -1,12 +1,11 @@
 package com.arcmaksim.kupchinonews
 
-import android.support.transition.Scene
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.item_detailed_news.view.*
+import android.view.animation.Animation
+import android.view.animation.Transformation
 import kotlinx.android.synthetic.main.item_news.view.*
 import java.util.*
 
@@ -14,9 +13,6 @@ class NewsAdapter(internal var mNews: ArrayList<NewsItem>) : RecyclerView.Adapte
 
     companion object {
         @JvmStatic private val TAG: String = NewsAdapter::class.java.simpleName
-
-        const private val news_simple = 0
-        const private val news_detailed = 1
     }
 
     private val mViewStates by lazy {
@@ -24,58 +20,84 @@ class NewsAdapter(internal var mNews: ArrayList<NewsItem>) : RecyclerView.Adapte
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
-        when(getItemViewType(position)) {
-            news_simple -> (holder as SimpleViewHolder).bindView(position)
-            else -> (holder as DetailedViewHolder).bindView(position)
-        }
+        (holder as ViewHolder).bindView(position)
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if(mViewStates[position]) news_detailed else news_simple
+        return 0
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
-        when(viewType) {
-            news_simple -> return SimpleViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.item_news, parent, false))
-            else -> return DetailedViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.item_detailed_news, parent, false))
-        }
+        return ViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.item_news, parent, false))
     }
 
     override fun getItemCount(): Int {
         return mNews.size
     }
 
-    inner class SimpleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        private var itemPosition: Int = 0
-
-        fun bindView(position: Int) {
-            itemView.newsHeader.text = mNews[position].mTitle
-            itemView.setOnClickListener { switch(itemPosition) }
-            itemPosition = position
-        }
-
-    }
-
-    inner class DetailedViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        private var itemPosition: Int = 0
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        var itemPosition: Int = 0
 
         fun bindView(position: Int) {
             itemView.newsTitle.text = mNews[position].mTitle
-            //itemImage.setImageResource(Recipes.resourceIds[position])
+            itemView.newsTitle.setOnClickListener { switch(position, itemView.expandableLayout) }
             itemView.newsDescription.text = mNews[position].mDescription
-            itemView.setOnClickListener { switch(itemPosition) }
             itemPosition = position
         }
-
     }
 
-    private fun switch(position: Int) {
+    private fun switch(position: Int, itemView: View) {
+
+        if(!mViewStates[position]) {
+            expand(itemView)
+        } else {
+            collapse(itemView)
+        }
+
         mViewStates[position] = !mViewStates[position]
-        //val transitionRoot = get
-        //val newScene = Scene.getSceneForLayout(,R.layout.item_detailed_news, )
-        notifyDataSetChanged()
+    }
+
+    fun expand(v: View) {
+        v.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        val targetHeight = v.measuredHeight
+
+        v.layoutParams.height = 1
+        v.visibility = View.VISIBLE
+
+        val a = object : Animation() {
+            override fun applyTransformation(interpolatedTime: Float, t: Transformation) {
+                v.layoutParams.height = if (interpolatedTime == 1f)
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                else
+                    (targetHeight * interpolatedTime).toInt()
+                v.requestLayout()
+            }
+
+            override fun willChangeBounds(): Boolean = true
+        }
+
+        a.duration = 150L
+        v.startAnimation(a)
+    }
+
+    fun collapse(v: View) {
+        val initialHeight = v.measuredHeight
+
+        val a = object : Animation() {
+            override fun applyTransformation(interpolatedTime: Float, t: Transformation) {
+                if (interpolatedTime == 1f) {
+                    v.visibility = View.GONE
+                } else {
+                    v.layoutParams.height = initialHeight - (initialHeight * interpolatedTime).toInt()
+                    v.requestLayout()
+                }
+            }
+
+            override fun willChangeBounds(): Boolean = true
+        }
+
+        a.duration = 150L
+        v.startAnimation(a)
     }
 
 }
