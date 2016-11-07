@@ -1,4 +1,4 @@
-package com.arcmaksim.kupchinonews.ui.fragments
+package com.arcmaksim.kupchinonews.ui.fragments.news
 
 import android.content.Context
 import android.net.ConnectivityManager
@@ -11,7 +11,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.arcmaksim.kupchinonews.NewsAdapter
+import com.arcmaksim.kupchinonews.ui.fragments.news.NewsAdapter
 import com.arcmaksim.kupchinonews.NewsItem
 import com.arcmaksim.kupchinonews.NewsParser
 import com.arcmaksim.kupchinonews.R
@@ -27,9 +27,10 @@ class NewsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     companion object {
         const val NEWS_LIST = "NEWS_LIST"
+        const val EXPANDABLE_LAYOUTS_STATES = "EXPANDABLE_LAYOUTS_STATES"
     }
 
-    private var mNews: ArrayList<NewsItem>? = null
+    private var mAdapter: NewsAdapter? = null
 
     override fun onRefresh() {
         if(progressBar.visibility == View.GONE) {
@@ -43,9 +44,8 @@ class NewsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return container?.inflate(R.layout.fragment_news)
-    }
+    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?) =
+            container?.inflate(R.layout.fragment_news)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -59,9 +59,12 @@ class NewsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                 layoutManager.orientation)
         recyclerView.addItemDecoration(dividerItemDecoration)
 
-        if(savedInstanceState != null && savedInstanceState.containsKey(NEWS_LIST)) {
-            mNews = savedInstanceState.getParcelableArrayList(NEWS_LIST)
-            updateDisplay(mNews as ArrayList<NewsItem>)
+        if(savedInstanceState != null) {
+            if(savedInstanceState.containsKey(NEWS_LIST)) {
+                val news: ArrayList<NewsItem> = savedInstanceState.getParcelableArrayList(NEWS_LIST)
+                val layoutStates: BooleanArray = savedInstanceState.getBooleanArray(EXPANDABLE_LAYOUTS_STATES)
+                updateDisplay(NewsAdapter(news, layoutStates))
+            }
         } else if (isNetworkAvailable()) getNews() else errorTextView.visibility = View.VISIBLE
     }
 
@@ -77,20 +80,24 @@ class NewsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         val call = client.newCall(request)
         call.enqueue(object : Callback {
             override fun onFailure(call: Call?, e: IOException?) {
-                errorTextView.text = resources.getString(R.string.unknown_error)
-                errorTextView.visibility = View.VISIBLE
-                progressBar.visibility = View.GONE
+                activity.runOnUiThread {
+                    errorTextView.text = resources.getString(R.string.unknown_error)
+                    errorTextView.visibility = View.VISIBLE
+                    progressBar.visibility = View.GONE
+                }
             }
 
             override fun onResponse(call: Call?, response: Response?) {
                 try {
                     if(response?.isSuccessful as Boolean) {
-                        mNews = NewsParser(activity).parse(response?.body()?.byteStream() as InputStream)
-                        activity.runOnUiThread { updateDisplay(mNews as ArrayList<NewsItem>) }
+                        val news: ArrayList<NewsItem> = NewsParser(activity).parse(response?.body()?.byteStream() as InputStream)
+                        activity.runOnUiThread { updateDisplay(NewsAdapter(news)) }
                     } else {
-                        errorTextView.text = resources.getString(R.string.failed_reception_error)
-                        errorTextView.visibility = View.VISIBLE
-                        progressBar.visibility = View.GONE
+                        activity.runOnUiThread {
+                            errorTextView.text = resources.getString(R.string.failed_reception_error)
+                            errorTextView.visibility = View.VISIBLE
+                            progressBar.visibility = View.GONE
+                        }
                     }
 
                 } catch (e: IOException) {
@@ -107,18 +114,19 @@ class NewsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         return networkInfo?.isConnected ?: false
     }
 
-    private fun updateDisplay(news: ArrayList<NewsItem>) {
-        recyclerView.adapter = NewsAdapter(news)
+    private fun updateDisplay(adapter: NewsAdapter) {
+        mAdapter = adapter
+        recyclerView.adapter = mAdapter
         progressBar.visibility = View.GONE
         recyclerView.visibility = View.VISIBLE
         swipeRefresh.isEnabled = true
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
-        if(mNews != null) {
-            outState?.putParcelableArrayList(NEWS_LIST, mNews)
+        if(mAdapter != null) {
+            outState?.putBooleanArray(EXPANDABLE_LAYOUTS_STATES, (mAdapter as NewsAdapter).mExpandableLayoutsStates)
+            outState?.putParcelableArrayList(NEWS_LIST, (mAdapter as NewsAdapter).mNews)
         }
         super.onSaveInstanceState(outState)
     }
 }
-

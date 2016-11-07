@@ -84,12 +84,12 @@ class NewsParser(private var mContext: Context) {
                     fDescription -> {
                         description = readTag(parser, fDescription)
 
-                        /*val asd = description.indexOf(fImageStartTag)
+                        val asd = description.indexOf(fImageStartTag)
                         if (asd != -1) {
                             val url = description.substring(description.indexOf(fImageStartTag) + fImageStartTag.length,
                                     description.indexOf(fDescriptionTitleFinishTag))
                             image = Picasso.with(mContext).load(url).get()
-                        }*/
+                        }
 
                         description = unescapeHtml4(description.replace(fDivTag.toRegex(), "").replace(fTagMask.toRegex(), ""))
 
