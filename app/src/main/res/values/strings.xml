@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">KupchinoNews</string>
+    <string name="feed_url">http://kupchinonews.ru/feed</string>
+
+    <string name="news_tab_title">Новостная\nлента</string>
+    <string name="calendar_tab_title">Календарь\nсобытий</string>
+    <string name="send_news_tab_title">Отправить\nновость</string>
+
+    <string name="no_internet_error">Отсутствует интернет-соединение</string>
+    <string name="failed_reception_error">Не удалось загрузить\n новостную ленту</string>
+    <string name="unknown_error">Неизвестная ошибка</string>
 </resources>

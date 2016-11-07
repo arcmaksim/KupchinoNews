@@ -26,7 +26,7 @@ import java.util.*
 class NewsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     companion object {
-        @JvmStatic val NEWS_LIST = "NEWS_LIST"
+        const val NEWS_LIST = "NEWS_LIST"
     }
 
     private var mNews: ArrayList<NewsItem>? = null
@@ -38,7 +38,7 @@ class NewsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                 recyclerView.visibility = View.GONE
                 getNews()
             } else {
-                errorTextView.text = "No internet"
+                errorTextView.text = resources.getString(R.string.no_internet_error)
             }
         }
     }
@@ -71,13 +71,13 @@ class NewsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
         val client = OkHttpClient()
         val request = Request.Builder()
-                .url("http://kupchinonews.ru/feed")
+                .url(resources.getString(R.string.feed_url))
                 .build()
 
         val call = client.newCall(request)
         call.enqueue(object : Callback {
             override fun onFailure(call: Call?, e: IOException?) {
-                errorTextView.text = "Failed to receive news"
+                errorTextView.text = resources.getString(R.string.unknown_error)
                 errorTextView.visibility = View.VISIBLE
                 progressBar.visibility = View.GONE
             }
@@ -88,7 +88,7 @@ class NewsFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                         mNews = NewsParser(activity).parse(response?.body()?.byteStream() as InputStream)
                         activity.runOnUiThread { updateDisplay(mNews as ArrayList<NewsItem>) }
                     } else {
-                        errorTextView.text = "Something wrong with receiving news"
+                        errorTextView.text = resources.getString(R.string.failed_reception_error)
                         errorTextView.visibility = View.VISIBLE
                         progressBar.visibility = View.GONE
                     }

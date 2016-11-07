@@ -33,9 +33,9 @@ class MainActivity : AppCompatActivity(){
     }
 
     private fun setupViewPager(viewPager: ViewPager) {
-        mViewPagerAdapter.addFragment(NewsFragment(), "Новостная\nлента")
-        mViewPagerAdapter.addFragment(CalendarFragment(), "Календарь\nсобытий")
-        mViewPagerAdapter.addFragment(SendNewsFragment(), "Отправить\nновость")
+        mViewPagerAdapter.addFragment(NewsFragment(), resources.getString(R.string.news_tab_title))
+        mViewPagerAdapter.addFragment(CalendarFragment(), resources.getString(R.string.calendar_tab_title))
+        mViewPagerAdapter.addFragment(SendNewsFragment(), resources.getString(R.string.send_news_tab_title))
         viewPager.adapter = mViewPagerAdapter
     }
 
