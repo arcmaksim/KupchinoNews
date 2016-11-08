@@ -1,7 +1,5 @@
 package com.arcmaksim.kupchinonews.ui.fragments.news
 
-import android.content.Context
-import android.net.ConnectivityManager
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.DividerItemDecoration
@@ -12,9 +10,7 @@ import android.view.ViewGroup
 import com.arcmaksim.kupchinonews.NewsItem
 import com.arcmaksim.kupchinonews.NewsParser
 import com.arcmaksim.kupchinonews.R
-import com.arcmaksim.kupchinonews.commons.inflate
-import com.arcmaksim.kupchinonews.commons.remove
-import com.arcmaksim.kupchinonews.commons.show
+import com.arcmaksim.kupchinonews.commons.*
 import com.arcmaksim.kupchinonews.ui.activities.MainActivity
 import kotlinx.android.synthetic.main.fragment_news.*
 import okhttp3.*
@@ -32,8 +28,8 @@ class NewsFragment : Fragment() {
     private var mAdapter: NewsAdapter? = null
 
     private fun onRefresh() {
-        if(isNetworkAvailable()) {
-            swipeRefresh.isRefreshing = true
+        swipeRefresh.isRefreshing = true
+        if(activity.isNetworkAvailable()) {
             getNews()
         } else {
             showError(R.string.no_internet_error)
@@ -48,7 +44,7 @@ class NewsFragment : Fragment() {
 
         swipeRefresh.setColorSchemeColors(R.attr.colorAccent)
         swipeRefresh.setOnRefreshListener { onRefresh() }
-        swipeRefresh.isEnabled = false
+        swipeRefresh.isEnabled = true
 
         val layoutManager = LinearLayoutManager(activity)
         recyclerView.layoutManager = layoutManager
@@ -63,7 +59,7 @@ class NewsFragment : Fragment() {
                 val layoutStates: BooleanArray = savedInstanceState.getBooleanArray(EXPANDABLE_LAYOUTS_STATES)
                 showNews(news, layoutStates)
             }
-        } else if(isNetworkAvailable()) {
+        } else if(activity.isNetworkAvailable()) {
             showProgressBar()
             getNews()
         }
@@ -97,12 +93,6 @@ class NewsFragment : Fragment() {
         })
     }
 
-    private fun isNetworkAvailable(): Boolean {
-        val manager = activity.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val networkInfo = manager.activeNetworkInfo
-        return networkInfo?.isConnected ?: false
-    }
-
     private fun showNews(news: ArrayList<NewsItem>, layoutStates: BooleanArray = BooleanArray(news.size, { false })) {
         mAdapter = NewsAdapter(news, layoutStates)
         errorTextView.remove()
@@ -114,15 +104,20 @@ class NewsFragment : Fragment() {
     }
 
     private fun showError(errorID: Int) {
-        progressBar.remove()
-        recyclerView.remove()
-        errorTextView.show()
-        errorTextView.text = resources.getString(errorID)
-        swipeRefresh.isEnabled = true
+        if(mAdapter != null) {
+            activity.showToast(resources.getString(errorID))
+        } else {
+            progressBar.remove()
+            recyclerView.remove()
+            errorTextView.show()
+            errorTextView.text = resources.getString(errorID)
+            swipeRefresh.isEnabled = true
+        }
         swipeRefresh.isRefreshing = false
     }
 
     private fun showProgressBar() {
+        swipeRefresh.isEnabled = false
         recyclerView.remove()
         errorTextView.remove()
         progressBar.show()

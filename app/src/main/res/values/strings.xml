@@ -6,7 +6,7 @@
     <string name="calendar_tab_title">Календарь\nсобытий</string>
     <string name="send_news_tab_title">Отправить\nновость</string>
 
-    <string name="no_internet_error">Отсутствует интернет-соединение</string>
+    <string name="no_internet_error">Отсутствует подключение\nк сети интернет</string>
     <string name="failed_reception_error">Не удалось загрузить\n новостную ленту</string>
     <string name="unknown_error">Неизвестная ошибка</string>
 </resources>

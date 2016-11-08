@@ -30,8 +30,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="@string/no_internet_error"
-            android:visibility="gone"/>
+            android:gravity="center_horizontal"
+            android:textSize="14sp"
+            android:textColor="@color/material_color_grey_600"
+            android:text="@string/no_internet_error"/>
 
     </RelativeLayout>
 
