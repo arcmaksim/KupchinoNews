@@ -7,3 +7,11 @@ import android.view.ViewGroup
 fun ViewGroup.inflate(layoutId: Int, attachToRoot: Boolean = false): View {
     return LayoutInflater.from(context).inflate(layoutId, this, attachToRoot)
 }
+
+fun View.remove() {
+    this.visibility = View.GONE
+}
+
+fun View.show() {
+    this.visibility = View.VISIBLE
+}

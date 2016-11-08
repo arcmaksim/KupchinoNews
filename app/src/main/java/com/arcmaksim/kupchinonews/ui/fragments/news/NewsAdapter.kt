@@ -18,14 +18,6 @@ class NewsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder> {
     val mNews: ArrayList<NewsItem>
     var mExpandableLayoutsStates: BooleanArray
 
-    /* TODO: find a better way for mExpandableLayoutsStates initialization
-       constructor(news: ArrayList<NewsItem>, expandableLayoutsStates: BooleanArray = BooleanArray(news.size, { false }))
-       local variable type mismatch: attempt to set or access a value of type java.lang.Object using a local variable of type int*/
-    constructor(news: ArrayList<NewsItem>) : super() {
-        mNews = news
-        mExpandableLayoutsStates = BooleanArray(mNews.size, { false })
-    }
-
     constructor(news: ArrayList<NewsItem>, expandableLayoutsStates: BooleanArray) : super() {
         mNews = news
         mExpandableLayoutsStates = expandableLayoutsStates
