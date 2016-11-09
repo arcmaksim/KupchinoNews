@@ -9,18 +9,14 @@ import com.arcmaksim.kupchinonews.R
 import kotlinx.android.synthetic.main.item_news.view.*
 import java.util.*
 
-class NewsAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder> {
+class NewsAdapter(val mNews: ArrayList<NewsItem>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
         @JvmStatic private val TAG: String = NewsAdapter::class.java.simpleName
     }
 
-    val mNews: ArrayList<NewsItem>
-    var mExpandableLayoutsStates: BooleanArray
-
-    constructor(news: ArrayList<NewsItem>, expandableLayoutsStates: BooleanArray) : super() {
-        mNews = news
-        mExpandableLayoutsStates = expandableLayoutsStates
+    val mExpandableLayoutsStates: BooleanArray by lazy {
+        BooleanArray(mNews.size, { false })
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) = (holder as ViewHolder).bindView(position)

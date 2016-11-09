@@ -114,8 +114,7 @@ class NewsParser(private var mContext: Context) {
                     fCreator -> creator = readTag(parser, fCreator)
                 }
             } else {
-                if (parser.name == "item")
-                    lock = false
+                if (parser.name == "item") lock = false
             }
         }
 

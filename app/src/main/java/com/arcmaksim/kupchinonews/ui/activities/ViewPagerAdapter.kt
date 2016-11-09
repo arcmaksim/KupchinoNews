@@ -1,4 +1,4 @@
-package com.arcmaksim.kupchinonews
+package com.arcmaksim.kupchinonews.ui.activities
 
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
