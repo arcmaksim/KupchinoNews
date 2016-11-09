@@ -1,4 +1,4 @@
-package com.arcmaksim.kupchinonews.ui.fragments.news
+package com.arcmaksim.kupchinonews.ui.fragments
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -23,23 +23,22 @@ class NewsAdapter(val mNews: ArrayList<NewsItem>) : RecyclerView.Adapter<Recycle
 
     override fun getItemViewType(position: Int) = 0
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder =
+    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int) =
         ViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.item_news, parent, false))
 
     override fun getItemCount() = mNews.size
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var itemPosition: Int = 0
 
         fun bindView(position: Int) {
-            itemView.newsTitle.text = mNews[position].mTitle
-            itemView.newsTitle.setOnClickListener { switch(position, itemView.expandableLayout) }
+            itemView.newsTitleView.text = mNews[position].mTitle
+            itemView.newsDateView.text = mNews[position].mPubDate
+            itemView.newsHeader.setOnClickListener { switch(position, itemView.expandableContent) }
             if(mNews[position].mImage != null) {
-                itemView.newsImage.setImageBitmap(mNews[position].mImage)
+                itemView.newsImageView.setImageBitmap(mNews[position].mImage)
             }
-            itemView.newsDescription.text = mNews[position].mDescription
-            itemView.expandableLayout.visibility = if (mExpandableLayoutsStates[position]) View.VISIBLE else View.GONE
-            itemPosition = position
+            itemView.newsDescriptionView.text = mNews[position].mDescription
+            itemView.expandableContent.visibility = if (mExpandableLayoutsStates[position]) View.VISIBLE else View.GONE
         }
     }
 

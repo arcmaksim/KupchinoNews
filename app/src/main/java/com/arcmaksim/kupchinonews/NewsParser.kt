@@ -5,6 +5,9 @@ import android.graphics.Bitmap
 import android.util.Xml
 import com.squareup.picasso.Picasso
 import org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4
+import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
+import org.joda.time.format.DateTimeFormatter
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserException
 import java.io.IOException
@@ -16,9 +19,6 @@ import java.util.*
 import java.util.regex.Pattern
 
 class NewsParser(private var mContext: Context) {
-
-    private val bitmaps = HashMap<String, Bitmap?>()
-    private var isDoneLoadingImages = false
 
     private val ns: String? = null
     private val fTitle = "title"
@@ -33,9 +33,6 @@ class NewsParser(private var mContext: Context) {
     //internal val fTagMask = "\\<[^\\>]*\\>"
     internal val fTagMask = "<[^>]*>"
     internal val fDivTag = "(?s)<div>.*?</div>"
-
-    internal val fOldDateFormat: DateFormat = SimpleDateFormat("EEE, dd MMM yyyy kk:mm:ss", Locale.ENGLISH)
-    internal val fNewDateFormat: DateFormat = SimpleDateFormat("kk:mm  dd.MM.yyyy", Locale.ENGLISH)
 
     @Throws(XmlPullParserException::class, IOException::class)
     fun parse(inputStream: InputStream): ArrayList<NewsItem> {
@@ -52,6 +49,9 @@ class NewsParser(private var mContext: Context) {
 
     @Throws(XmlPullParserException::class, IOException::class)
     private fun readFeed(parser: XmlPullParser): ArrayList<NewsItem> {
+
+        val formatIn = DateTimeFormat.forPattern("EEE, dd MMM yyy kk:mm:ss Z")
+        val formatOut = DateTimeFormat.forPattern("d MMMM kk:mm").withLocale(Locale("RU"))
 
         parser.require(XmlPullParser.START_TAG, null, "rss")
         var title: String = ""
@@ -78,9 +78,7 @@ class NewsParser(private var mContext: Context) {
                 when (parser.name) {
 
                     fTitle -> title = readTag(parser, fTitle)
-
                     fLink -> link = readTag(parser, fLink)
-
                     fDescription -> {
                         description = readTag(parser, fDescription)
 
@@ -97,20 +95,10 @@ class NewsParser(private var mContext: Context) {
                         m.reset(description)
                         description = m.replaceAll("").trim()
                     }
-
                     fPubDate -> {
-                        pubDate = readTag(parser, fPubDate)
-
-                        var d: Date? = null
-                        try {
-                            d = fOldDateFormat.parse(pubDate)
-                        } catch (e: ParseException) {
-                            e.printStackTrace()
-                        }
-
-                        pubDate = fNewDateFormat.format(d)
+                        val d = formatIn.parseDateTime(readTag(parser, fPubDate))
+                        pubDate = formatOut.print(d)
                     }
-
                     fCreator -> creator = readTag(parser, fCreator)
                 }
             } else {
@@ -124,19 +112,19 @@ class NewsParser(private var mContext: Context) {
     @Throws(XmlPullParserException::class, IOException::class)
     private fun readTag(parser: XmlPullParser, tag: String): String {
         parser.require(XmlPullParser.START_TAG, ns, tag)
-        val title = readText(parser)
+        val content = readText(parser)
         parser.require(XmlPullParser.END_TAG, ns, tag)
-        return title
+        return content
     }
 
     @Throws(IOException::class, XmlPullParserException::class)
     private fun readText(parser: XmlPullParser): String {
-        var result = ""
+        var text = ""
         if (parser.next() == XmlPullParser.TEXT) {
-            result = parser.text
+            text = parser.text
             parser.nextTag()
         }
-        return result
+        return text
     }
 
 }

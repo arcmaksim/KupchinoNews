@@ -3,7 +3,7 @@
     <style name="DefaultMaterialTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/material_color_blue_500</item>
         <item name="colorPrimaryDark">@color/material_color_blue_700</item>
-        <item name="colorAccent">@color/material_color_pink_accent_200</item>
+        <item name="colorAccent">@color/material_color_red_accent_200</item>
     </style>
 
     <style name="DefaultMaterialTheme.Launcher">

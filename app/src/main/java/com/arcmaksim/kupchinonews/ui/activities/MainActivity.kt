@@ -4,9 +4,8 @@ import android.os.Bundle
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import com.arcmaksim.kupchinonews.R
-import com.arcmaksim.kupchinonews.ui.activities.ViewPagerAdapter
 import com.arcmaksim.kupchinonews.ui.fragments.CalendarFragment
-import com.arcmaksim.kupchinonews.ui.fragments.news.NewsFragment
+import com.arcmaksim.kupchinonews.ui.fragments.NewsFragment
 import com.arcmaksim.kupchinonews.ui.fragments.SendNewsFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
