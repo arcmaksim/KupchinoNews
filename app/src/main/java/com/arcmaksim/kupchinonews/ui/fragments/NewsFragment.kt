@@ -1,6 +1,10 @@
 package com.arcmaksim.kupchinonews.ui.fragments
 
+import android.content.Context
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.os.Message
 import android.support.v4.app.Fragment
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
@@ -89,8 +93,10 @@ class NewsFragment : Fragment() {
                     mIsNewsLoading = false
                     if(response?.isSuccessful as Boolean) {
                         val news: ArrayList<NewsItem> = NewsParser(activity).parse(response?.body()?.byteStream() as InputStream)
-                        mAdapter = NewsAdapter(news)
-                        activity.runOnUiThread { showNews() }
+                        activity.runOnUiThread {
+                            mAdapter = NewsAdapter(news, activity)
+                            showNews()
+                        }
                     } else {
                         activity.runOnUiThread { showError(R.string.unknown_error) }
                     }

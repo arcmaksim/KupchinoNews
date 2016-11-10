@@ -2,7 +2,10 @@ package com.arcmaksim.kupchinonews.commons
 
 import android.app.Activity
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.net.ConnectivityManager
+import android.support.annotation.ColorRes
+import android.support.v4.graphics.drawable.DrawableCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,4 +31,9 @@ fun Activity.isNetworkAvailable(): Boolean {
 
 fun Activity.showToast(message: String, duration: Int = Toast.LENGTH_LONG) {
     Toast.makeText(this, message, duration).show()
+}
+
+fun Drawable.tint(context: Context, @ColorRes color: Int) {
+    val wrapDrawable = DrawableCompat.wrap(this)
+    DrawableCompat.setTint(wrapDrawable, context.resources.getColor(color, null))
 }

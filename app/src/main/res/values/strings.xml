@@ -9,4 +9,8 @@
     <string name="no_internet_error">Отсутствует подключение\nк сети интернет</string>
     <string name="failed_reception_error">Не удалось загрузить\n новостную ленту</string>
     <string name="unknown_error">Неизвестная ошибка</string>
+
+    <string name="go_to_site_popup">Перейти на сайт</string>
+    <string name="hide_content_layout_popup">Свернуть новость</string>
+    <string name="show_content_layout_popup">Развернуть новость</string>
 </resources>
