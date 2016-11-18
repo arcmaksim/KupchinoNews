@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -21,8 +22,9 @@ class NewsAdapter(val mNews: ArrayList<NewsItem>, val mContext: Context) : Recyc
         @JvmStatic private val TAG: String = NewsAdapter::class.java.simpleName
     }
 
+    private var mCurrentPopupMenu: PopupMenu? = null
     val mExpandableLayoutsStates: BooleanArray by lazy {
-        BooleanArray(mNews.size, { i -> if(i == 0) true else false })
+        BooleanArray(mNews.size, { i -> if (i == 0) true else false })
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) = (holder as ViewHolder).bindView(position)
@@ -30,14 +32,14 @@ class NewsAdapter(val mNews: ArrayList<NewsItem>, val mContext: Context) : Recyc
     override fun getItemViewType(position: Int) = 0
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int) =
-        ViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.item_news, parent, false))
+            ViewHolder(LayoutInflater.from(parent?.context).inflate(R.layout.item_news, parent, false))
 
     override fun getItemCount() = mNews.size
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), PopupMenu.OnMenuItemClickListener {
 
         override fun onMenuItemClick(item: MenuItem?): Boolean {
-            when(item?.itemId) {
+            when (item?.itemId) {
                 R.id.item_toggle_content_layout -> toggleExpandableContent(adapterPosition, itemView.expandableContent)
                 R.id.item_go_to_site -> {
                     val viewIntent = Intent("android.intent.action.VIEW", Uri.parse(mNews[adapterPosition].mLink))
@@ -53,26 +55,31 @@ class NewsAdapter(val mNews: ArrayList<NewsItem>, val mContext: Context) : Recyc
             itemView.newsDateView.text = mNews[position].mPubDate
             itemView.newsHeader.setOnClickListener { toggleExpandableContent(position, itemView.expandableContent) }
 
-            if(mNews[position].mImage != null) {
+            if (mNews[position].mImage != null) {
                 itemView.newsImageView.setImageBitmap(mNews[position].mImage)
             }
-            itemView.newsDescriptionView.text = mNews[position].mDescription
+            itemView.newsDescriptionView.text = Html.fromHtml(mNews[position].mDescription)
             itemView.expandableContent.visibility = if (mExpandableLayoutsStates[position]) View.VISIBLE else View.GONE
 
             itemView.newsPopupMenuButton.drawable.tint(mContext, R.color.material_color_grey_600)
             itemView.newsPopupMenuButton.setOnClickListener {
-                val popupMenu = PopupMenu(mContext, it)
-                popupMenu.setOnMenuItemClickListener(this)
-                popupMenu.inflate(R.menu.popup_news)
-                if(mExpandableLayoutsStates[position]) popupMenu.menu.getItem(0).setTitle(R.string.hide_content_layout_popup)
-                popupMenu.show()
+                mCurrentPopupMenu = PopupMenu(mContext, it)
+                mCurrentPopupMenu?.setOnMenuItemClickListener(this)
+                mCurrentPopupMenu?.inflate(R.menu.popup_news)
+                if (mExpandableLayoutsStates[position]) mCurrentPopupMenu?.menu?.getItem(0)?.setTitle(R.string.hide_content_layout_popup)
+                mCurrentPopupMenu?.show()
             }
         }
     }
 
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView?) {
+        mCurrentPopupMenu?.dismiss()
+        super.onDetachedFromRecyclerView(recyclerView)
+    }
+
     private fun toggleExpandableContent(position: Int, itemView: View) {
         mExpandableLayoutsStates[position] = !mExpandableLayoutsStates[position]
-        itemView.visibility = if(mExpandableLayoutsStates[position]) View.VISIBLE else View.GONE
+        itemView.visibility = if (mExpandableLayoutsStates[position]) View.VISIBLE else View.GONE
     }
 
 }
