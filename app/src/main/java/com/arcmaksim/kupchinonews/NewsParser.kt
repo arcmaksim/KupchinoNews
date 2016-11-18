@@ -3,20 +3,14 @@ package com.arcmaksim.kupchinonews
 import android.content.Context
 import android.graphics.Bitmap
 import android.util.Xml
+import com.arcmaksim.kupchinonews.ui.fragments.Cleaner
 import com.squareup.picasso.Picasso
-import org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4
-import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
-import org.joda.time.format.DateTimeFormatter
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserException
 import java.io.IOException
 import java.io.InputStream
-import java.text.DateFormat
-import java.text.ParseException
-import java.text.SimpleDateFormat
 import java.util.*
-import java.util.regex.Pattern
 
 class NewsParser(private var mContext: Context) {
 
@@ -30,9 +24,6 @@ class NewsParser(private var mContext: Context) {
     internal val fImageStartTag = "src=\""
     internal val fDesriptionTag = "</div>\r\n\t<p>"
     internal val fDescriptionTitleFinishTag = "\" alt"
-    //internal val fTagMask = "\\<[^\\>]*\\>"
-    internal val fTagMask = "<[^>]*>"
-    internal val fDivTag = "(?s)<div>.*?</div>"
 
     @Throws(XmlPullParserException::class, IOException::class)
     fun parse(inputStream: InputStream): ArrayList<NewsItem> {
@@ -50,7 +41,7 @@ class NewsParser(private var mContext: Context) {
     @Throws(XmlPullParserException::class, IOException::class)
     private fun readFeed(parser: XmlPullParser): ArrayList<NewsItem> {
 
-        val formatIn = DateTimeFormat.forPattern("EEE, dd MMM yyy kk:mm:ss Z")
+        val formatIn = DateTimeFormat.forPattern("EEE, dd MMM yyy HH:mm:ss Z").withLocale(Locale("EN"))
         val formatOut = DateTimeFormat.forPattern("d MMMM kk:mm").withLocale(Locale("RU"))
 
         parser.require(XmlPullParser.START_TAG, null, "rss")
@@ -60,49 +51,36 @@ class NewsParser(private var mContext: Context) {
         var pubDate: String = ""
         var creator: String = ""
         var image: Bitmap? = null
-        var lock = true
         val items = ArrayList<NewsItem>()
-        var isEnd = false
 
         while (parser.next() != XmlPullParser.END_DOCUMENT) {
 
-            if (parser.eventType == XmlPullParser.END_TAG && parser.name == "item") {
-                if (isEnd) {
-                    items.add(NewsItem(title, link, description, pubDate, creator, image))
-                    image = null
-                }
-                isEnd = !isEnd
+            if(parser.eventType == XmlPullParser.END_TAG && parser.name == "item") {
+                items.add(NewsItem(title, link, description, pubDate, creator, image))
+                image = null
             }
 
-            if (!lock) {
-                when (parser.name) {
+            when(parser.name) {
+                fTitle -> title = readTag(parser, fTitle)
+                fLink -> link = readTag(parser, fLink)
+                fDescription -> {
+                    description = readTag(parser, fDescription)
 
-                    fTitle -> title = readTag(parser, fTitle)
-                    fLink -> link = readTag(parser, fLink)
-                    fDescription -> {
-                        description = readTag(parser, fDescription)
-
-                        val asd = description.indexOf(fImageStartTag)
-                        if (asd != -1) {
-                            val url = description.substring(description.indexOf(fImageStartTag) + fImageStartTag.length,
-                                    description.indexOf(fDescriptionTitleFinishTag))
-                            image = Picasso.with(mContext).load(url).get()
-                        }
-
-                        description = unescapeHtml4(description.replace(fDivTag.toRegex(), "").replace(fTagMask.toRegex(), ""))
-
-                        val m = Pattern.compile("\\p{Cntrl}").matcher("")
-                        m.reset(description)
-                        description = m.replaceAll("").trim()
+                    val asd = description.indexOf(fImageStartTag)
+                    if(asd != -1) {
+                        val url = description.substring(description.indexOf(fImageStartTag) + fImageStartTag.length,
+                                description.indexOf(fDescriptionTitleFinishTag))
+                        image = Picasso.with(mContext).load(url).get()
                     }
-                    fPubDate -> {
-                        val d = formatIn.parseDateTime(readTag(parser, fPubDate))
-                        pubDate = formatOut.print(d)
-                    }
-                    fCreator -> creator = readTag(parser, fCreator)
+
+                    description = Cleaner.cleanHtml(description)
                 }
-            } else {
-                if (parser.name == "item") lock = false
+                fPubDate -> {
+                    val tag = readTag(parser, fPubDate)
+                    val date = formatIn.parseDateTime(tag)
+                    pubDate = formatOut.print(date)
+                }
+                fCreator -> creator = readTag(parser, fCreator)
             }
         }
 
