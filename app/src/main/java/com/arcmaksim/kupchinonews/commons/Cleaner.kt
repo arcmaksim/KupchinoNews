@@ -1,4 +1,4 @@
-package com.arcmaksim.kupchinonews.ui.fragments
+package com.arcmaksim.kupchinonews.commons
 
 import org.htmlcleaner.HtmlCleaner
 import org.htmlcleaner.TagNode
