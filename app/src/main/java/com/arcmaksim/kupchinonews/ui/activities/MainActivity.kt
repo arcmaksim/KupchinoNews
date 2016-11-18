@@ -9,7 +9,7 @@ import com.arcmaksim.kupchinonews.ui.fragments.NewsFragment
 import com.arcmaksim.kupchinonews.ui.fragments.SendNewsFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(){
+class MainActivity : AppCompatActivity() {
 
     companion object {
         @JvmStatic val TAG: String = MainActivity::class.java.simpleName
