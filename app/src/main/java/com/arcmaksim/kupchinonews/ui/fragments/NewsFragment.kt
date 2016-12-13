@@ -26,7 +26,7 @@ class NewsFragment : Fragment() {
 
     private fun onRefresh() {
         swipeRefresh.isRefreshing = true
-        if(activity.isNetworkAvailable()) {
+        if (activity.isNetworkAvailable()) {
             getNews()
         } else {
             showError(R.string.no_internet_error)
@@ -55,10 +55,10 @@ class NewsFragment : Fragment() {
         recyclerView.addItemDecoration(dividerItemDecoration)
         recyclerView.setHasFixedSize(true)
 
-        if(mAdapter != null) {
+        mAdapter?.let {
             showNews()
             swipeRefresh.isRefreshing = mIsNewsLoading
-        } else if(activity.isNetworkAvailable()) {
+        } ?: if (activity.isNetworkAvailable()) {
             showProgressBar()
             getNews()
         }
@@ -87,7 +87,7 @@ class NewsFragment : Fragment() {
             override fun onResponse(call: Call?, response: Response?) {
                 try {
                     mIsNewsLoading = false
-                    if(response?.isSuccessful as Boolean) {
+                    if (response?.isSuccessful as Boolean) {
                         val news: ArrayList<NewsItem> = NewsParser(activity).parse(response?.body()?.byteStream() as InputStream)
                         activity.runOnUiThread {
                             mAdapter = NewsAdapter(news, activity)
@@ -115,9 +115,9 @@ class NewsFragment : Fragment() {
     }
 
     private fun showError(errorID: Int) {
-        if(mAdapter != null) {
+        mAdapter?.let {
             activity.showToast(resources.getString(errorID))
-        } else {
+        } ?: let {
             progressBar.remove()
             recyclerView.remove()
             errorTextView.show()

@@ -36,13 +36,13 @@ data class NewsItem(var mTitle: String = "",
     }
 
     private constructor(parcel: Parcel?): this() {
-        if(parcel != null) {
-            mTitle = parcel.readString()
-            mLink = parcel.readString()
-            mDescription = parcel.readString()
-            mPubDate = parcel.readString()
-            mCreator = parcel.readString()
-            mImage = parcel.readParcelable<Bitmap>(ClassLoader.getSystemClassLoader())
+        parcel?.let {
+            mTitle = it.readString()
+            mLink = it.readString()
+            mDescription = it.readString()
+            mPubDate = it.readString()
+            mCreator = it.readString()
+            mImage = it.readParcelable<Bitmap>(ClassLoader.getSystemClassLoader())
         }
     }
 

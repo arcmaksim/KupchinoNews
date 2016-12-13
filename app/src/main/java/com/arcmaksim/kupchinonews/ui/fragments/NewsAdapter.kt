@@ -2,6 +2,7 @@ package com.arcmaksim.kupchinonews.ui.fragments
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
 import android.support.v7.widget.PopupMenu
 import android.support.v7.widget.RecyclerView
@@ -55,8 +56,12 @@ class NewsAdapter(val mNews: ArrayList<NewsItem>, val mContext: Context) : Recyc
             itemView.newsDateView.text = mNews[position].mPubDate
             itemView.newsHeader.setOnClickListener { toggleExpandableContent(position, itemView.expandableContent) }
 
-            if (mNews[position].mImage != null) {
-                itemView.newsImageView.setImageBitmap(mNews[position].mImage)
+            mNews[position].mImage?.let {
+                if (mContext.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                    itemView.newsTitleImage.setImageBitmap(it)
+                } else {
+                    itemView.newsDescriptionImage.setImageBitmap(it)
+                }
             }
             itemView.newsDescriptionView.text = Html.fromHtml(mNews[position].mDescription)
             itemView.expandableContent.visibility = if (mExpandableLayoutsStates[position]) View.VISIBLE else View.GONE
@@ -66,7 +71,9 @@ class NewsAdapter(val mNews: ArrayList<NewsItem>, val mContext: Context) : Recyc
                 mCurrentPopupMenu = PopupMenu(mContext, it)
                 mCurrentPopupMenu?.setOnMenuItemClickListener(this)
                 mCurrentPopupMenu?.inflate(R.menu.popup_news)
-                if (mExpandableLayoutsStates[position]) mCurrentPopupMenu?.menu?.getItem(0)?.setTitle(R.string.hide_content_layout_popup)
+                if (mExpandableLayoutsStates[position]) {
+                    mCurrentPopupMenu?.menu?.getItem(0)?.setTitle(R.string.hide_content_layout_popup)
+                }
                 mCurrentPopupMenu?.show()
             }
         }
