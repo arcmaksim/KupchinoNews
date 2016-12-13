@@ -3,7 +3,7 @@ package com.arcmaksim.kupchinonews
 import android.content.Context
 import android.graphics.Bitmap
 import android.util.Xml
-import com.arcmaksim.kupchinonews.ui.fragments.Cleaner
+import com.arcmaksim.kupchinonews.commons.Cleaner
 import com.squareup.picasso.Picasso
 import org.joda.time.format.DateTimeFormat
 import org.xmlpull.v1.XmlPullParser
