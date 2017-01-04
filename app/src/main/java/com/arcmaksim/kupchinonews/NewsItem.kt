@@ -7,7 +7,7 @@ import android.os.Parcelable
 data class NewsItem(var mTitle: String = "",
                     var mLink: String = "",
                     var mDescription: String = "",
-                    var mPubDate: String = "",
+                    var mPublicationDate: String = "",
                     var mCreator: String = "",
                     var mImage: Bitmap? = null) : Parcelable {
 
@@ -30,7 +30,7 @@ data class NewsItem(var mTitle: String = "",
         parcel?.writeString(mTitle)
         parcel?.writeString(mLink)
         parcel?.writeString(mDescription)
-        parcel?.writeString(mPubDate)
+        parcel?.writeString(mPublicationDate)
         parcel?.writeString(mCreator)
         parcel?.writeParcelable(mImage, flags)
     }
@@ -40,7 +40,7 @@ data class NewsItem(var mTitle: String = "",
             mTitle = it.readString()
             mLink = it.readString()
             mDescription = it.readString()
-            mPubDate = it.readString()
+            mPublicationDate = it.readString()
             mCreator = it.readString()
             mImage = it.readParcelable<Bitmap>(ClassLoader.getSystemClassLoader())
         }

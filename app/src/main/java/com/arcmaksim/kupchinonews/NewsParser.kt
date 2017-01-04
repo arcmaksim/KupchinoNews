@@ -14,35 +14,31 @@ import java.util.*
 
 class NewsParser(private var mContext: Context) {
 
-    private val ns: String? = null
-    private val fTitle = "title"
-    private val fLink = "link"
-    private val fDescription = "content:encoded"
-    private val fPubDate = "pubDate"
-    private val fCreator = "dc:creator"
+    private val mTitleTag = "title"
+    private val mLinkTag = "link"
+    private val mDescriptionTag = "content:encoded"
+    private val mPublicationDateTag = "pubDate"
+    private val mCreatorTag = "dc:creator"
 
-    internal val fImageStartTag = "src=\""
-    internal val fDesriptionTag = "</div>\r\n\t<p>"
-    internal val fDescriptionTitleFinishTag = "\" alt"
+    internal val mImageOpeningTag = "src=\""
+    internal val mImageClosingTag = "\" alt"
 
     @Throws(XmlPullParserException::class, IOException::class)
     fun parse(inputStream: InputStream): ArrayList<NewsItem> {
-        try {
+        inputStream.use { inputStream ->
             val parser = Xml.newPullParser()
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false)
             parser.setInput(inputStream, null)
             parser.nextTag()
             return readFeed(parser)
-        } finally {
-            inputStream.close()
         }
     }
 
     @Throws(XmlPullParserException::class, IOException::class)
     private fun readFeed(parser: XmlPullParser): ArrayList<NewsItem> {
 
-        val formatIn = DateTimeFormat.forPattern("EEE, dd MMM yyy HH:mm:ss Z").withLocale(Locale("EN"))
-        val formatOut = DateTimeFormat.forPattern("d MMMM kk:mm").withLocale(Locale("RU"))
+        val givenDateFormat = DateTimeFormat.forPattern("EEE, dd MMM yyy HH:mm:ss Z").withLocale(Locale("EN"))
+        val targetDateFormat = DateTimeFormat.forPattern("d MMMM kk:mm").withLocale(Locale("RU"))
 
         parser.require(XmlPullParser.START_TAG, null, "rss")
         var title: String = ""
@@ -61,26 +57,26 @@ class NewsParser(private var mContext: Context) {
             }
 
             when(parser.name) {
-                fTitle -> title = readTag(parser, fTitle)
-                fLink -> link = readTag(parser, fLink)
-                fDescription -> {
-                    description = readTag(parser, fDescription)
+                mTitleTag -> title = readTag(parser, mTitleTag)
+                mLinkTag -> link = readTag(parser, mLinkTag)
+                mDescriptionTag -> {
+                    description = readTag(parser, mDescriptionTag)
 
-                    val asd = description.indexOf(fImageStartTag)
-                    if(asd != -1) {
-                        val url = description.substring(description.indexOf(fImageStartTag) + fImageStartTag.length,
-                                description.indexOf(fDescriptionTitleFinishTag))
+                    val imageUrlPosition = description.indexOf(mImageOpeningTag)
+                    if(imageUrlPosition != -1) {
+                        val url = description.substring(imageUrlPosition + mImageOpeningTag.length,
+                                description.indexOf(mImageClosingTag))
                         image = Picasso.with(mContext).load(url).get()
                     }
 
                     description = Cleaner.cleanHtml(description)
                 }
-                fPubDate -> {
-                    val tag = readTag(parser, fPubDate)
-                    val date = formatIn.parseDateTime(tag)
-                    pubDate = formatOut.print(date)
+                mPublicationDateTag -> {
+                    val tagContent = readTag(parser, mPublicationDateTag)
+                    val date = givenDateFormat.parseDateTime(tagContent)
+                    pubDate = targetDateFormat.print(date)
                 }
-                fCreator -> creator = readTag(parser, fCreator)
+                mCreatorTag -> creator = readTag(parser, mCreatorTag)
             }
         }
 
@@ -89,20 +85,20 @@ class NewsParser(private var mContext: Context) {
 
     @Throws(XmlPullParserException::class, IOException::class)
     private fun readTag(parser: XmlPullParser, tag: String): String {
-        parser.require(XmlPullParser.START_TAG, ns, tag)
-        val content = readText(parser)
-        parser.require(XmlPullParser.END_TAG, ns, tag)
-        return content
+        parser.require(XmlPullParser.START_TAG, null, tag)
+        val tagContent = readText(parser)
+        parser.require(XmlPullParser.END_TAG, null, tag)
+        return tagContent
     }
 
     @Throws(IOException::class, XmlPullParserException::class)
     private fun readText(parser: XmlPullParser): String {
-        var text = ""
+        var tagText = ""
         if (parser.next() == XmlPullParser.TEXT) {
-            text = parser.text
+            tagText = parser.text
             parser.nextTag()
         }
-        return text
+        return tagText
     }
 
 }

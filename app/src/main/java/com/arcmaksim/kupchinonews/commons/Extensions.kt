@@ -15,7 +15,7 @@ fun ViewGroup.inflate(layoutId: Int, attachToRoot: Boolean = false): View {
     return LayoutInflater.from(context).inflate(layoutId, this, attachToRoot)
 }
 
-fun View.remove() {
+fun View.hide() {
     this.visibility = View.GONE
 }
 

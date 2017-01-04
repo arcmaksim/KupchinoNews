@@ -25,7 +25,7 @@ class NewsAdapter(val mNews: ArrayList<NewsItem>, val mContext: Context) : Recyc
 
     private var mCurrentPopupMenu: PopupMenu? = null
     val mExpandableLayoutsStates: BooleanArray by lazy {
-        BooleanArray(mNews.size, { i -> if (i == 0) true else false })
+        BooleanArray(mNews.size, { i -> i == 0 })
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) = (holder as ViewHolder).bindView(position)
@@ -53,7 +53,7 @@ class NewsAdapter(val mNews: ArrayList<NewsItem>, val mContext: Context) : Recyc
 
         fun bindView(position: Int) {
             itemView.newsTitleView.text = mNews[position].mTitle
-            itemView.newsDateView.text = mNews[position].mPubDate
+            itemView.newsDateView.text = mNews[position].mPublicationDate
             itemView.newsHeader.setOnClickListener { toggleExpandableContent(position, itemView.expandableContent) }
 
             mNews[position].mImage?.let {

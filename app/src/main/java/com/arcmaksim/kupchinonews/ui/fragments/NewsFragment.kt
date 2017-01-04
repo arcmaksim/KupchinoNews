@@ -106,8 +106,8 @@ class NewsFragment : Fragment() {
     }
 
     private fun showNews() {
-        errorTextView.remove()
-        progressBar.remove()
+        errorTextView.hide()
+        progressBar.hide()
         recyclerView.show()
         recyclerView.adapter = mAdapter
         swipeRefresh.isEnabled = true
@@ -118,8 +118,8 @@ class NewsFragment : Fragment() {
         mAdapter?.let {
             activity.showToast(resources.getString(errorID))
         } ?: let {
-            progressBar.remove()
-            recyclerView.remove()
+            progressBar.hide()
+            recyclerView.hide()
             errorTextView.show()
             errorTextView.text = resources.getString(errorID)
             swipeRefresh.isEnabled = true
@@ -129,8 +129,8 @@ class NewsFragment : Fragment() {
 
     private fun showProgressBar() {
         swipeRefresh.isEnabled = false
-        recyclerView.remove()
-        errorTextView.remove()
+        recyclerView.hide()
+        errorTextView.hide()
         progressBar.show()
     }
 }

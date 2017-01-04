@@ -4,9 +4,7 @@ import android.os.Bundle
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import com.arcmaksim.kupchinonews.R
-import com.arcmaksim.kupchinonews.ui.fragments.CalendarFragment
 import com.arcmaksim.kupchinonews.ui.fragments.NewsFragment
-import com.arcmaksim.kupchinonews.ui.fragments.SendNewsFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -24,7 +22,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        viewPager.offscreenPageLimit = 2
+        viewPager.offscreenPageLimit = 0
         setupViewPager(viewPager)
         tabLayout.setupWithViewPager(viewPager)
 
@@ -33,8 +31,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupViewPager(viewPager: ViewPager) {
         mViewPagerAdapter.addFragment(NewsFragment(), resources.getString(R.string.news_tab_title))
-        mViewPagerAdapter.addFragment(CalendarFragment(), resources.getString(R.string.calendar_tab_title))
-        mViewPagerAdapter.addFragment(SendNewsFragment(), resources.getString(R.string.send_news_tab_title))
         viewPager.adapter = mViewPagerAdapter
     }
 
