@@ -1,4 +1,4 @@
-package com.arcmaksim.kupchinonews
+package com.arcmaksim.kupchinonews.newsfeed
 
 import android.graphics.Bitmap
 import android.os.Parcel
@@ -9,19 +9,17 @@ data class NewsItem(var mTitle: String = "",
                     var mDescription: String = "",
                     var mPublicationDate: String = "",
                     var mCreator: String = "",
-                    var mImage: Bitmap? = null) : Parcelable {
+                    var mImageUrl: String = "") : Parcelable {
 
+    var mImage: Bitmap? = null
 
     companion object {
         @JvmField
         val CREATOR: Parcelable.Creator<NewsItem> = object : Parcelable.Creator<NewsItem> {
-            override fun createFromParcel(p0: Parcel?): NewsItem {
-                return NewsItem(p0)
-            }
 
-            override fun newArray(size: Int): Array<out NewsItem> {
-                return Array(size) {NewsItem()}
-            }
+            override fun createFromParcel(parcel: Parcel?): NewsItem = NewsItem(parcel)
+
+            override fun newArray(size: Int): Array<out NewsItem> = Array(size) { NewsItem() }
 
         }
     }

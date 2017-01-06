@@ -1,10 +1,7 @@
-package com.arcmaksim.kupchinonews
+package com.arcmaksim.kupchinonews.commons
 
-import android.content.Context
-import android.graphics.Bitmap
 import android.util.Xml
-import com.arcmaksim.kupchinonews.commons.Cleaner
-import com.squareup.picasso.Picasso
+import com.arcmaksim.kupchinonews.newsfeed.NewsItem
 import org.joda.time.format.DateTimeFormat
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserException
@@ -12,7 +9,7 @@ import java.io.IOException
 import java.io.InputStream
 import java.util.*
 
-class NewsParser(private var mContext: Context) {
+class NewsFeedParser {
 
     private val mTitleTag = "title"
     private val mLinkTag = "link"
@@ -20,8 +17,8 @@ class NewsParser(private var mContext: Context) {
     private val mPublicationDateTag = "pubDate"
     private val mCreatorTag = "dc:creator"
 
-    internal val mImageOpeningTag = "src=\""
-    internal val mImageClosingTag = "\" alt"
+    private val mImageOpeningTag = "src=\""
+    private val mImageClosingTag = "\" alt"
 
     @Throws(XmlPullParserException::class, IOException::class)
     fun parse(inputStream: InputStream): ArrayList<NewsItem> {
@@ -41,35 +38,26 @@ class NewsParser(private var mContext: Context) {
         val targetDateFormat = DateTimeFormat.forPattern("d MMMM kk:mm").withLocale(Locale("RU"))
 
         parser.require(XmlPullParser.START_TAG, null, "rss")
-        var title: String = ""
-        var link: String = ""
-        var description: String = ""
-        var pubDate: String = ""
-        var creator: String = ""
-        var image: Bitmap? = null
+        var title = ""
+        var link = ""
+        var description = ""
+        var pubDate = ""
+        var creator = ""
+        var imageUrl = ""
         val items = ArrayList<NewsItem>()
 
         while (parser.next() != XmlPullParser.END_DOCUMENT) {
 
-            if(parser.eventType == XmlPullParser.END_TAG && parser.name == "item") {
-                items.add(NewsItem(title, link, description, pubDate, creator, image))
-                image = null
+            if (parser.eventType == XmlPullParser.END_TAG && parser.name == "item") {
+                items.add(NewsItem(title, link, description, pubDate, creator, imageUrl))
             }
 
-            when(parser.name) {
+            when (parser.name) {
                 mTitleTag -> title = readTag(parser, mTitleTag)
                 mLinkTag -> link = readTag(parser, mLinkTag)
                 mDescriptionTag -> {
                     description = readTag(parser, mDescriptionTag)
-
-                    val imageUrlPosition = description.indexOf(mImageOpeningTag)
-                    if(imageUrlPosition != -1) {
-                        val url = description.substring(imageUrlPosition + mImageOpeningTag.length,
-                                description.indexOf(mImageClosingTag))
-                        image = Picasso.with(mContext).load(url).get()
-                    }
-
-                    description = Cleaner.cleanHtml(description)
+                    imageUrl = extractImageUrl(description)
                 }
                 mPublicationDateTag -> {
                     val tagContent = readTag(parser, mPublicationDateTag)
@@ -99,6 +87,17 @@ class NewsParser(private var mContext: Context) {
             parser.nextTag()
         }
         return tagText
+    }
+
+    private fun extractImageUrl(description: String): String {
+        var imageUrl = ""
+
+        if (description.indexOf(mImageOpeningTag) != -1) {
+            imageUrl = description.substring(description.indexOf(mImageOpeningTag)
+                    + mImageOpeningTag.length, description.indexOf(mImageClosingTag))
+        }
+
+        return imageUrl
     }
 
 }

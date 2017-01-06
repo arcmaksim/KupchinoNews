@@ -1,20 +1,17 @@
-package com.arcmaksim.kupchinonews.ui.activities
+package com.arcmaksim.kupchinonews.activity
 
 import android.os.Bundle
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import com.arcmaksim.kupchinonews.R
-import com.arcmaksim.kupchinonews.ui.fragments.NewsFragment
+import com.arcmaksim.kupchinonews.newsfeed.NewsFeedFragment
+import com.arcmaksim.kupchinonews.newsfeed.NewsFeedPresenter
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    companion object {
-        @JvmStatic val TAG: String = MainActivity::class.java.simpleName
-    }
-
     private val mViewPagerAdapter by lazy {
-        ViewPagerAdapter(supportFragmentManager)
+        ViewPagerAdapter(supportFragmentManager, this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,7 +27,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupViewPager(viewPager: ViewPager) {
-        mViewPagerAdapter.addFragment(NewsFragment(), resources.getString(R.string.news_tab_title))
+        val fragment = NewsFeedFragment()
+        val title = resources.getString(R.string.news_tab_title)
+        val presenter = NewsFeedPresenter(fragment, this)
+        mViewPagerAdapter.addFragment(fragment, title, presenter)
+
         viewPager.adapter = mViewPagerAdapter
     }
 

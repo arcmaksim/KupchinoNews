@@ -24,8 +24,7 @@
             android:layout_height="40dp"
             android:layout_centerInParent="true"
             android:indeterminate="true"
-            app:mpb_indeterminateTint="?attr/colorAccent"
-            android:visibility="gone"/>
+            app:mpb_indeterminateTint="?attr/colorAccent"/>
 
         <TextView
             android:id="@+id/errorTextView"
@@ -35,7 +34,8 @@
             android:gravity="center_horizontal"
             android:text="@string/no_internet_error"
             android:textColor="@color/material_color_grey_600"
-            android:textSize="14sp"/>
+            android:textSize="14sp"
+            android:visibility="gone"/>
 
     </RelativeLayout>
 
