@@ -100,8 +100,6 @@ class NewsFeedFragment : Fragment(), NewsFeedContract.View, PopupMenu.OnMenuItem
             showRefreshIndicator(false)
             mAdapter = NewsFeedAdapter(newsFeed, mItemListener, activity)
             recyclerView.adapter = mAdapter
-        } ?: let {
-            showRefreshIndicator(true)
         }
 
         recyclerView.adapter = mAdapter
@@ -152,8 +150,7 @@ class NewsFeedFragment : Fragment(), NewsFeedContract.View, PopupMenu.OnMenuItem
 
     private fun onRefresh() {
         if (activity.isNetworkAvailable()) {
-            mIsRefreshingActive = true
-            showRefreshIndicator(mIsRefreshingActive)
+            showRefreshIndicator(true)
             mPresenter.retrieveNewsFeed()
         } else {
             showErrorLabel(R.string.no_internet_error)
