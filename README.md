@@ -1,4 +1,4 @@
-# Kupchino News
+# Kupchino News [![Build Status](https://travis-ci.org/arcmaksim/KupchinoNews.svg?branch=master)](https://travis-ci.org/arcmaksim/KupchinoNews)
 
 ### Current status
 Waiting for prototype approval
