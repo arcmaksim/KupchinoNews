@@ -2,6 +2,7 @@ package com.arcmaksim.kupchinonews.newsfeed
 
 import android.content.Context
 import android.content.res.Configuration
+import android.graphics.drawable.BitmapDrawable
 import android.support.v7.widget.RecyclerView
 import android.text.Html
 import android.view.LayoutInflater
@@ -42,9 +43,9 @@ class NewsFeedAdapter(val mNews: ArrayList<NewsItem>,
 
                 mImage?.let {
                     if (mContext.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                        itemView.newsTitleImage.setImageBitmap(it)
+                        itemView.newsTitleImage.setImageDrawable(BitmapDrawable(mContext.resources ,it))
                     } else {
-                        itemView.newsDescriptionImage.setImageBitmap(it)
+                        itemView.newsDescriptionImage.setImageDrawable(BitmapDrawable(mContext.resources ,it))
                     }
                 }
                 itemView.newsDescriptionView.text = Html.fromHtml(mDescription)
