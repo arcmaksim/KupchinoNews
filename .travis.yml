@@ -1,4 +1,5 @@
 language: android
+jdk: oraclejdk8
 android:
   components:
     - tools
@@ -11,7 +12,7 @@ android:
     - sys-img-armeabi-v7a-android-16
 
 script:
-   - ./gradlew build connectedCheck
+  - ./gradlew build connectedCheck
 
 before_install:
   - chmod +x gradlew
