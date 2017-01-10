@@ -10,18 +10,14 @@ android:
   licenses:
     - '.+'
 
-sudo: required
-
 jdk:
   - oraclejdk8
-
-install: true
 
 before_script:
   - chmod +x gradlew
 
 script:
-  - ./gradlew assemble --stacktrace
+  - ./gradlew build connectedCheck
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
