@@ -113,7 +113,7 @@ class NewsFeedFragment : Fragment(), NewsFeedContract.View, PopupMenu.OnMenuItem
         mCurrentPopupMenu?.setOnMenuItemClickListener(this)
         mCurrentPopupMenu?.inflate(R.menu.popup_news)
         if (mAdapter?.mExpandableLayoutsStates?.get(positionInAdapter)!!) {
-            mCurrentPopupMenu?.menu?.getItem(0)?.setTitle(R.string.hide_content_layout_popup)
+            mCurrentPopupMenu?.menu?.getItem(0)?.setTitle(R.string.news_feed_hide_content_layout_popup)
         }
         mCurrentPopupMenu?.show()
     }
@@ -153,7 +153,7 @@ class NewsFeedFragment : Fragment(), NewsFeedContract.View, PopupMenu.OnMenuItem
             showRefreshIndicator(true)
             mPresenter.retrieveNewsFeed()
         } else {
-            showErrorLabel(R.string.no_internet_error)
+            showErrorLabel(R.string.news_feed_no_internet_error)
         }
     }
 

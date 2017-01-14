@@ -1,16 +1,14 @@
 <resources>
     <string name="app_name">KupchinoNews</string>
-    <string name="feed_url">http://kupchinonews.ru/feed</string>
 
-    <string name="news_tab_title">Новостная\nлента</string>
-    <string name="calendar_tab_title">Календарь\nсобытий</string>
-    <string name="send_news_tab_title">Отправить\nновость</string>
-
-    <string name="no_internet_error">Отсутствует подключение\nк сети интернет</string>
-    <string name="failed_reception_error">Не удалось загрузить\n новостную ленту</string>
-    <string name="unknown_error">Неизвестная ошибка</string>
-
-    <string name="go_to_site_popup">Перейти на сайт</string>
-    <string name="hide_content_layout_popup">Свернуть новость</string>
-    <string name="show_content_layout_popup">Развернуть новость</string>
+    <!-- news feed screen start -->
+    <string name="news_feed_url">http://kupchinonews.ru/feed</string>
+    <string name="news_feed_tab_title">Новостная\nлента</string>
+    <string name="news_feed_no_internet_error">Отсутствует подключение\nк сети интернет</string>
+    <string name="news_feed_failed_reception_error">Не удалось загрузить\n новостную ленту</string>
+    <string name="news_feed_unknown_error">Неизвестная ошибка</string>
+    <string name="news_feed_go_to_site_popup">Перейти на сайт</string>
+    <string name="news_feed_hide_content_layout_popup">Свернуть новость</string>
+    <string name="news_feed_show_content_layout_popup">Развернуть новость</string>
+    <!-- news feed screen end -->
 </resources>

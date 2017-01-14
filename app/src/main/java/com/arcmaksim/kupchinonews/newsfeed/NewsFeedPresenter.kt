@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit
 class NewsFeedPresenter(view: NewsFeedContract.View, context: Context) : NewsFeedContract.Presenter {
 
     companion object {
-        val TAG: String = NewsFeedPresenter::class.java.simpleName
+        const val TAG: String = "NewsFeedPresenter"
     }
 
     private val mNewsFeedView: NewsFeedContract.View = view
@@ -39,14 +39,14 @@ class NewsFeedPresenter(view: NewsFeedContract.View, context: Context) : NewsFee
                 .retryOnConnectionFailure(false)
                 .build()
         val request = Request.Builder()
-                .url(mContext.resources.getString(R.string.feed_url))
+                .url(mContext.resources.getString(R.string.news_feed_url))
                 .build()
 
         val call = client.newCall(request)
         call.enqueue(object : Callback {
             override fun onFailure(call: Call?, e: IOException?) =
                     (mContext as Activity).runOnUiThread {
-                        mNewsFeedView.showErrorLabel(R.string.failed_reception_error)
+                        mNewsFeedView.showErrorLabel(R.string.news_feed_failed_reception_error)
                     }
 
             override fun onResponse(call: Call?, response: Response?) {
@@ -59,7 +59,7 @@ class NewsFeedPresenter(view: NewsFeedContract.View, context: Context) : NewsFee
                         }
                     } else {
                         (mContext as Activity).runOnUiThread {
-                            mNewsFeedView.showErrorLabel(R.string.unknown_error)
+                            mNewsFeedView.showErrorLabel(R.string.news_feed_unknown_error)
                         }
                     }
 
