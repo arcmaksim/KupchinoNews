@@ -5,12 +5,14 @@
         android:id="@+id/item_toggle_content_layout"
         app:showAsAction="withText"
         android:title="@string/news_feed_show_content_layout_popup"
+        android:textColor="@color/material_color_grey_900"
         android:visible="true"/>
 
     <item
         android:id="@+id/item_go_to_site"
         app:showAsAction="withText"
         android:title="@string/news_feed_go_to_site_popup"
+        android:textColor="@color/material_color_grey_900"
         android:visible="true"/>
 
 </menu>

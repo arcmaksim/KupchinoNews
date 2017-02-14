@@ -21,7 +21,8 @@
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:paddingTop="16dp"
-            android:textColor="@android:color/black"
+            android:textColor="@color/material_color_grey_900"
+            android:lineSpacingExtra="@dimen/textview_lineSpacingExtra"
             android:textSize="15sp"
             tools:text="Amazing news title!"/>
 
@@ -82,7 +83,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:textColor="@android:color/black"
+            android:textColor="@color/material_color_grey_900"
+            android:lineSpacingExtra="@dimen/textview_lineSpacingExtra"
             android:textSize="15sp"
             tools:text="Description"/>
 
