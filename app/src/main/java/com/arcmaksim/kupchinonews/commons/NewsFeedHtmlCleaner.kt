@@ -34,6 +34,7 @@ object NewsFeedHtmlCleaner {
         root.evaluateXPath("//div[@class='wp-caption alignnone']")
                 .map { it as TagNode }
                 .forEach { it.removeFromTree() }
+
         // ... and spaces
         root.evaluateXPath("//div[@class='page_post_sized_thumbs clear_fix']")
                 .map { it as TagNode }

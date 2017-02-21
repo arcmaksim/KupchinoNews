@@ -23,13 +23,13 @@ fun View.show() {
     this.visibility = View.VISIBLE
 }
 
-fun Activity.isNetworkAvailable(): Boolean {
+fun Context.isNetworkAvailable(): Boolean {
     val manager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     val networkInfo = manager.activeNetworkInfo
     return networkInfo?.isConnected ?: false
 }
 
-fun Activity.showToast(message: String, duration: Int = Toast.LENGTH_LONG) {
+fun Activity.showToast(message: String, duration: Int = Toast.LENGTH_SHORT) {
     Toast.makeText(this, message, duration).show()
 }
 
