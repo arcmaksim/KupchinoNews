@@ -1,12 +1,12 @@
-<android.support.v4.widget.SwipeRefreshLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/swipeRefresh"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <RelativeLayout
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -16,27 +16,46 @@
             android:layout_height="match_parent"
             android:divider="@android:color/black"
             android:dividerHeight="2dp"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            tools:visibility="gone"/>
 
-        <me.zhanghai.android.materialprogressbar.MaterialProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_centerInParent="true"
-            android:indeterminate="true"
-            app:mpb_indeterminateTint="?attr/colorAccent"/>
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <LinearLayout
+        android:id="@+id/errorView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        tools:visibility="gone">
 
         <TextView
             android:id="@+id/errorTextView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:gravity="center_horizontal"
+            android:layout_height="match_parent"
+            android:gravity="center"
             android:text="@string/news_feed_no_internet_error"
             android:textColor="@color/material_color_grey_600"
-            android:textSize="14sp"
-            android:visibility="gone"/>
+            android:textSize="14sp"/>
 
-    </RelativeLayout>
+        <Button
+            android:id="@+id/retryButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/news_feed_retry_button"
+            android:textColor="?colorPrimary"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:theme="@style/BorderlessButton"/>
 
- </android.support.v4.widget.SwipeRefreshLayout>
+    </LinearLayout>
+
+    <me.zhanghai.android.materialprogressbar.MaterialProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:indeterminate="true"
+        app:mpb_indeterminateTint="?attr/colorAccent"/>
+
+</FrameLayout>

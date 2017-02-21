@@ -10,5 +10,7 @@
     <string name="news_feed_go_to_site_popup">Перейти на сайт</string>
     <string name="news_feed_hide_content_layout_popup">Свернуть новость</string>
     <string name="news_feed_show_content_layout_popup">Развернуть новость</string>
+    <string name="news_feed_retry_button">Повторить попытку?</string>
     <!-- news feed screen end -->
+
 </resources>

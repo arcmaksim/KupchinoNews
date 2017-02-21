@@ -10,4 +10,8 @@
         <item name="android:windowBackground">@drawable/launch_screen</item>
     </style>
 
+    <style name="BorderlessButton" parent="DefaultMaterialTheme">
+        <item name="colorControlHighlight">@color/material_color_grey_300</item>
+    </style>
+
 </resources>

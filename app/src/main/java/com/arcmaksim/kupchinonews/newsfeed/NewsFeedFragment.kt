@@ -7,20 +7,31 @@ import android.support.v4.app.Fragment
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.PopupMenu
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import com.arcmaksim.kupchinonews.R
-import com.arcmaksim.kupchinonews.commons.*
+import com.arcmaksim.kupchinonews.commons.hide
+import com.arcmaksim.kupchinonews.commons.inflate
+import com.arcmaksim.kupchinonews.commons.show
+import com.arcmaksim.kupchinonews.commons.showToast
 import kotlinx.android.synthetic.main.fragment_news.*
 import kotlinx.android.synthetic.main.item_news.view.*
 import java.util.*
 
 class NewsFeedFragment : Fragment(), NewsFeedContract.View, PopupMenu.OnMenuItemClickListener {
 
+    interface NewsItemListener {
+
+        fun onHeaderClick(positionInAdapter: Int)
+
+        fun onMenuClick(positionInAdapter: Int)
+
+    }
+
     private var mAdapter: NewsFeedAdapter? = null
-    private var mIsRefreshingActive = false
     private lateinit var mPresenter: NewsFeedContract.Presenter
     private var mCurrentPopupMenu: PopupMenu? = null
     private var mLastPositionInAdapter = -1
@@ -44,9 +55,10 @@ class NewsFeedFragment : Fragment(), NewsFeedContract.View, PopupMenu.OnMenuItem
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        swipeRefresh.setColorSchemeColors(R.attr.colorAccent)
+        val typedValue = TypedValue()
+        context.theme.resolveAttribute(R.attr.colorAccent, typedValue, true)
+        swipeRefresh.setColorSchemeColors(typedValue.data)
         swipeRefresh.setOnRefreshListener { onRefresh() }
-        showRefreshIndicator(mIsRefreshingActive)
 
         val layoutManager = LinearLayoutManager(activity)
         recyclerView.layoutManager = layoutManager
@@ -55,11 +67,12 @@ class NewsFeedFragment : Fragment(), NewsFeedContract.View, PopupMenu.OnMenuItem
         recyclerView.addItemDecoration(dividerItemDecoration)
         recyclerView.setHasFixedSize(true)
 
-        mAdapter?.let {
-            showNewsFeed(null)
-        } ?: if (activity.isNetworkAvailable()) {
-            mPresenter.start()
-        }
+        retryButton.setOnClickListener { onRetry() }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mPresenter.start()
     }
 
     override fun setPresenter(presenter: NewsFeedContract.Presenter) {
@@ -67,39 +80,35 @@ class NewsFeedFragment : Fragment(), NewsFeedContract.View, PopupMenu.OnMenuItem
     }
 
     override fun showLoadingIndicator() {
-        swipeRefresh.isEnabled = false
-        showRefreshIndicator(false)
-
+        errorView.hide()
         recyclerView.hide()
-        errorTextView.hide()
+        swipeRefresh.isRefreshing = false
         progressBar.show()
     }
 
-    override fun showErrorLabel(errorResID: Int) {
-        swipeRefresh.isEnabled = true
-        showRefreshIndicator(false)
+    override fun showErrorPanel(errorResID: Int) {
+        recyclerView.hide()
+        swipeRefresh.isRefreshing = false
+        progressBar.hide()
+        errorView.show()
+        errorTextView.text = resources.getString(errorResID)
+    }
 
-        mAdapter?.let {
-            activity.showToast(resources.getString(errorResID))
-        } ?: let {
-            progressBar.hide()
-            recyclerView.hide()
-            errorTextView.show()
-            errorTextView.text = resources.getString(errorResID)
-        }
+    override fun showErrorToast(errorResID: Int) {
+        swipeRefresh.isRefreshing = false
+        activity.showToast(resources.getString(errorResID))
     }
 
     override fun showNewsFeed(newsFeed: ArrayList<NewsItem>?) {
-        swipeRefresh.isEnabled = true
+        dismissNewsItemMenu()
 
-        errorTextView.hide()
+        errorView.hide()
         progressBar.hide()
         recyclerView.show()
 
         newsFeed?.let {
-            showRefreshIndicator(false)
+            swipeRefresh.isRefreshing = false
             mAdapter = NewsFeedAdapter(newsFeed, mItemListener, activity)
-            recyclerView.adapter = mAdapter
         }
 
         recyclerView.adapter = mAdapter
@@ -118,21 +127,19 @@ class NewsFeedFragment : Fragment(), NewsFeedContract.View, PopupMenu.OnMenuItem
         mCurrentPopupMenu?.show()
     }
 
-    override fun showRefreshIndicator(visibility: Boolean) {
-        mIsRefreshingActive = visibility
-        swipeRefresh.isRefreshing = mIsRefreshingActive
+    override fun dismissNewsItemMenu() {
+        mCurrentPopupMenu?.dismiss()
+    }
+
+    override fun showRefreshIndicator() {
+        swipeRefresh.isRefreshing = true
     }
 
     override fun toggleExpandableContent(positionInAdapter: Int) {
         val newsItemState = !mAdapter?.mExpandableLayoutsStates?.get(positionInAdapter)!!
         mAdapter?.mExpandableLayoutsStates?.set(positionInAdapter, newsItemState)
         val expandableContent = recyclerView.findViewHolderForAdapterPosition(positionInAdapter).itemView.expandableContent
-        expandableContent.visibility =
-                if (newsItemState) {
-                    View.VISIBLE
-                } else {
-                    View.GONE
-                }
+        expandableContent.visibility = if (newsItemState) View.VISIBLE else View.GONE
     }
 
     override fun onMenuItemClick(item: MenuItem?): Boolean {
@@ -148,21 +155,11 @@ class NewsFeedFragment : Fragment(), NewsFeedContract.View, PopupMenu.OnMenuItem
         return false
     }
 
-    private fun onRefresh() {
-        if (activity.isNetworkAvailable()) {
-            showRefreshIndicator(true)
-            mPresenter.retrieveNewsFeed()
-        } else {
-            showErrorLabel(R.string.news_feed_no_internet_error)
-        }
-    }
+    private fun onRefresh() = mPresenter.fetchNewsFeed()
 
-    interface NewsItemListener {
-
-        fun onHeaderClick(positionInAdapter: Int)
-
-        fun onMenuClick(positionInAdapter: Int)
-
+    private fun onRetry() {
+        showLoadingIndicator()
+        mPresenter.fetchNewsFeed()
     }
 
 }

@@ -17,30 +17,32 @@ data class NewsItem(var mTitle: String = "",
         @JvmField
         val CREATOR: Parcelable.Creator<NewsItem> = object : Parcelable.Creator<NewsItem> {
 
-            override fun createFromParcel(parcel: Parcel?): NewsItem = NewsItem(parcel)
+            override fun createFromParcel(parcel: Parcel): NewsItem = NewsItem(parcel)
 
-            override fun newArray(size: Int): Array<out NewsItem> = Array(size) { NewsItem() }
+            override fun newArray(size: Int): Array<NewsItem> = Array(size) { NewsItem() }
 
         }
     }
 
-    override fun writeToParcel(parcel: Parcel?, flags: Int) {
-        parcel?.writeString(mTitle)
-        parcel?.writeString(mLink)
-        parcel?.writeString(mDescription)
-        parcel?.writeString(mPublicationDate)
-        parcel?.writeString(mCreator)
-        parcel?.writeParcelable(mImage, flags)
+    private constructor(parcel: Parcel) : this() {
+        with(parcel) {
+            mTitle = readString()
+            mLink = readString()
+            mDescription = readString()
+            mPublicationDate = readString()
+            mCreator = readString()
+            mImage = readParcelable<Bitmap>(ClassLoader.getSystemClassLoader())
+        }
     }
 
-    private constructor(parcel: Parcel?): this() {
-        parcel?.let {
-            mTitle = it.readString()
-            mLink = it.readString()
-            mDescription = it.readString()
-            mPublicationDate = it.readString()
-            mCreator = it.readString()
-            mImage = it.readParcelable<Bitmap>(ClassLoader.getSystemClassLoader())
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        with(parcel) {
+            writeString(mTitle)
+            writeString(mLink)
+            writeString(mDescription)
+            writeString(mPublicationDate)
+            writeString(mCreator)
+            writeParcelable(mImage, flags)
         }
     }
 

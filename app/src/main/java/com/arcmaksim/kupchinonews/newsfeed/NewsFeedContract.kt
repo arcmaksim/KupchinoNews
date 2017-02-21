@@ -10,23 +10,33 @@ class NewsFeedContract {
 
         fun showLoadingIndicator()
 
-        fun showErrorLabel(errorResID: Int)
+        fun showErrorPanel(errorResID: Int)
+
+        fun showErrorToast(errorResID: Int)
 
         fun showNewsFeed(newsFeed: ArrayList<NewsItem>? = null)
 
-        fun showRefreshIndicator(visibility: Boolean)
+        fun showRefreshIndicator()
 
         fun toggleExpandableContent(positionInAdapter: Int)
 
         fun showNewsItemMenu(positionInAdapter: Int)
 
+        fun dismissNewsItemMenu()
+
     }
 
     interface Presenter : BasePresenter {
 
-        fun retrieveNewsFeed()
+        fun fetchNewsFeed()
 
         fun processNewsFeed(newsFeed: ArrayList<NewsItem>): ArrayList<NewsItem>
+
+        fun isLoadingActive(): Boolean
+
+        fun isContentsPresent(): Boolean
+
+        fun setLoading(isLoadingActive: Boolean)
 
     }
 
