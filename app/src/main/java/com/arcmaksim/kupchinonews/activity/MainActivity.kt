@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupViewPager(viewPager: ViewPager) {
-        val fragment = NewsFeedFragment()
+        val fragment = NewsFeedFragment.newInstance()
         val title = resources.getString(R.string.news_feed_tab_title)
         val presenter = NewsFeedPresenter(fragment, this)
         mViewPagerAdapter.addFragment(fragment, title, presenter)

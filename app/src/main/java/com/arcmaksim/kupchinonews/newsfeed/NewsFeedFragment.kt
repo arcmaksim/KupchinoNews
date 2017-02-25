@@ -23,6 +23,15 @@ import java.util.*
 
 class NewsFeedFragment : Fragment(), NewsFeedContract.View, PopupMenu.OnMenuItemClickListener {
 
+    companion object {
+        fun newInstance(): NewsFeedFragment = NewsFeedFragment()
+    }
+
+    private var mAdapter: NewsFeedAdapter? = null
+    private lateinit var mPresenter: NewsFeedContract.Presenter
+    private var mCurrentPopupMenu: PopupMenu? = null
+    private var mLastPositionInAdapter = -1
+
     interface NewsItemListener {
 
         fun onHeaderClick(positionInAdapter: Int)
@@ -30,11 +39,6 @@ class NewsFeedFragment : Fragment(), NewsFeedContract.View, PopupMenu.OnMenuItem
         fun onMenuClick(positionInAdapter: Int)
 
     }
-
-    private var mAdapter: NewsFeedAdapter? = null
-    private lateinit var mPresenter: NewsFeedContract.Presenter
-    private var mCurrentPopupMenu: PopupMenu? = null
-    private var mLastPositionInAdapter = -1
 
     private var mItemListener: NewsItemListener = object : NewsItemListener {
 
@@ -60,7 +64,7 @@ class NewsFeedFragment : Fragment(), NewsFeedContract.View, PopupMenu.OnMenuItem
         swipeRefresh.setColorSchemeColors(typedValue.data)
         swipeRefresh.setOnRefreshListener { onRefresh() }
 
-        val layoutManager = LinearLayoutManager(activity)
+        val layoutManager = LinearLayoutManager(context)
         recyclerView.layoutManager = layoutManager
         val dividerItemDecoration = DividerItemDecoration(recyclerView.context,
                 layoutManager.orientation)
@@ -140,6 +144,8 @@ class NewsFeedFragment : Fragment(), NewsFeedContract.View, PopupMenu.OnMenuItem
         mAdapter?.mExpandableLayoutsStates?.set(positionInAdapter, newsItemState)
         val expandableContent = recyclerView.findViewHolderForAdapterPosition(positionInAdapter).itemView.expandableContent
         expandableContent.visibility = if (newsItemState) View.VISIBLE else View.GONE
+
+        if (newsItemState) recyclerView.scrollToPosition(positionInAdapter)
     }
 
     override fun onMenuItemClick(item: MenuItem?): Boolean {
