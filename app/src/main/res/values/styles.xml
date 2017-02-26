@@ -1,6 +1,6 @@
 <resources>
 
-    <style name="DefaultMaterialTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="DefaultMaterialTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/material_color_blue_500</item>
         <item name="colorPrimaryDark">@color/material_color_blue_700</item>
         <item name="colorAccent">@color/material_color_red_accent_200</item>
@@ -12,6 +12,23 @@
 
     <style name="BorderlessButton" parent="DefaultMaterialTheme">
         <item name="colorControlHighlight">@color/material_color_grey_300</item>
+    </style>
+
+    <style name="NewsTitleTextView" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/material_color_grey_900</item>
+        <item name="android:lineSpacingExtra">@dimen/textview_lineSpacingExtra</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="NewsBodyTextView" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/material_color_grey_900</item>
+        <item name="android:lineSpacingExtra">@dimen/textview_lineSpacingExtra</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="NewsDateTextView" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/material_color_grey_600</item>
+        <item name="android:textSize">15sp</item>
     </style>
 
 </resources>

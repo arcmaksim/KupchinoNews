@@ -18,6 +18,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingEnd="8dp"
+            android:paddingStart="8dp"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
             android:adjustViewBounds="true"
@@ -28,12 +31,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/newsTitleImage"
+            android:layout_toEndOf="@id/newsTitleImage"
             android:layout_toLeftOf="@+id/newsPopupMenuButton"
-            android:paddingLeft="16dp"
+            android:layout_toStartOf="@+id/newsPopupMenuButton"
             android:paddingRight="16dp"
+            android:paddingEnd="16dp"
+            android:paddingLeft="8dp"
+            android:paddingStart="8dp"
             android:paddingTop="16dp"
-            android:textColor="@android:color/black"
-            android:textSize="15sp"
+            style="@style/NewsTitleTextView"
             tools:text="Amazing news title!"/>
 
         <TextView
@@ -42,11 +48,13 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/newsTitleView"
             android:layout_toRightOf="@id/newsTitleImage"
+            android:layout_toEndOf="@id/newsTitleImage"
             android:paddingBottom="16dp"
-            android:paddingLeft="16dp"
+            android:paddingLeft="8dp"
+            android:paddingStart="8dp"
             android:paddingRight="16dp"
-            android:textColor="@color/material_color_grey_600"
-            android:textSize="15sp"
+            android:paddingEnd="16dp"
+            style="@style/NewsDateTextView"
             tools:text="19 february 21:34"/>
 
         <ImageButton
@@ -57,6 +65,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignTop="@+id/newsTitleView"
             android:layout_marginRight="16dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginTop="16dp"
             android:minWidth="48dp"
             android:minHeight="48dp"
@@ -86,8 +95,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:textColor="@android:color/black"
-            android:textSize="15sp"
+            style="@style/NewsBodyTextView"
             tools:text="Description"/>
 
     </LinearLayout>
