@@ -144,8 +144,6 @@ class NewsFeedFragment : Fragment(), NewsFeedContract.View, PopupMenu.OnMenuItem
         mAdapter?.mExpandableLayoutsStates?.set(positionInAdapter, newsItemState)
         val expandableContent = recyclerView.findViewHolderForAdapterPosition(positionInAdapter).itemView.expandableContent
         expandableContent.visibility = if (newsItemState) View.VISIBLE else View.GONE
-
-        if (newsItemState) recyclerView.scrollToPosition(positionInAdapter)
     }
 
     override fun onMenuItemClick(item: MenuItem?): Boolean {
