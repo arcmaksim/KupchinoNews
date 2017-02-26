@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import android.net.ConnectivityManager
 import android.support.annotation.ColorRes
+import android.support.v4.content.ContextCompat
 import android.support.v4.graphics.drawable.DrawableCompat
 import android.view.LayoutInflater
 import android.view.View
@@ -35,9 +36,5 @@ fun Activity.showToast(message: String, duration: Int = Toast.LENGTH_SHORT) {
 
 fun Drawable.tint(context: Context, @ColorRes color: Int) {
     val wrapDrawable = DrawableCompat.wrap(this)
-    if (android.os.Build.VERSION.SDK_INT >= 21) {
-        DrawableCompat.setTint(wrapDrawable, context.resources.getColor(color, null))
-    } else {
-        DrawableCompat.setTint(wrapDrawable, context.resources.getColor(color))
-    }
+    DrawableCompat.setTint(wrapDrawable, ContextCompat.getColor(context, color))
 }
