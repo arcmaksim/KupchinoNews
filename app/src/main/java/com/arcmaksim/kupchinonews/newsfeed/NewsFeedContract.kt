@@ -38,6 +38,8 @@ class NewsFeedContract {
 
         fun setLoading(isLoadingActive: Boolean)
 
+        fun retryFetching()
+
     }
 
 }

@@ -54,7 +54,6 @@
             android:tint="@color/material_color_grey_600"
             android:contentDescription="@null"
             android:src="@mipmap/ic_more_vert_black_24dp"/>
-
     </RelativeLayout>
 
     <LinearLayout
@@ -84,7 +83,6 @@
             android:layout_marginTop="8dp"
             style="@style/NewsBodyTextView"
             tools:text="Description"/>
-
     </LinearLayout>
 
 </LinearLayout>

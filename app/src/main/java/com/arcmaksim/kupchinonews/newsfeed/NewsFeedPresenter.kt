@@ -48,6 +48,11 @@ class NewsFeedPresenter(view: NewsFeedContract.View, context: Context) : NewsFee
         }
     }
 
+    override fun retryFetching() {
+        mNewsFeedView.showLoadingIndicator()
+        fetchNewsFeed()
+    }
+
     override fun fetchNewsFeed() {
         if (mContext.isNetworkAvailable()) {
             mIsLoadingActive = true

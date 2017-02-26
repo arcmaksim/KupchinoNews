@@ -1,8 +1,10 @@
 package com.arcmaksim.kupchinonews.newsfeed
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.support.design.widget.AppBarLayout
 import android.support.v4.app.Fragment
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
@@ -13,6 +15,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import com.arcmaksim.kupchinonews.R
+import com.arcmaksim.kupchinonews.activity.MainActivity
 import com.arcmaksim.kupchinonews.commons.hide
 import com.arcmaksim.kupchinonews.commons.inflate
 import com.arcmaksim.kupchinonews.commons.show
@@ -21,7 +24,8 @@ import kotlinx.android.synthetic.main.fragment_news.*
 import kotlinx.android.synthetic.main.item_news.view.*
 import java.util.*
 
-class NewsFeedFragment : Fragment(), NewsFeedContract.View, PopupMenu.OnMenuItemClickListener {
+class NewsFeedFragment : Fragment(), NewsFeedContract.View, PopupMenu.OnMenuItemClickListener,
+        AppBarLayout.OnOffsetChangedListener {
 
     companion object {
         fun newInstance(): NewsFeedFragment = NewsFeedFragment()
@@ -31,6 +35,8 @@ class NewsFeedFragment : Fragment(), NewsFeedContract.View, PopupMenu.OnMenuItem
     private lateinit var mPresenter: NewsFeedContract.Presenter
     private var mCurrentPopupMenu: PopupMenu? = null
     private var mLastPositionInAdapter = -1
+    private var mAppBar: AppBarLayout? = null
+    private var mIsAppBarCollapsed = false
 
     interface NewsItemListener {
 
@@ -48,6 +54,16 @@ class NewsFeedFragment : Fragment(), NewsFeedContract.View, PopupMenu.OnMenuItem
 
     }
 
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        mAppBar = (context as MainActivity).getAppBar()
+        mAppBar?.addOnOffsetChangedListener(this)
+    }
+
+    override fun onOffsetChanged(appBarLayout: AppBarLayout?, verticalOffset: Int) {
+        mIsAppBarCollapsed = verticalOffset == 0
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
@@ -62,7 +78,7 @@ class NewsFeedFragment : Fragment(), NewsFeedContract.View, PopupMenu.OnMenuItem
         val typedValue = TypedValue()
         context.theme.resolveAttribute(R.attr.colorAccent, typedValue, true)
         swipeRefresh.setColorSchemeColors(typedValue.data)
-        swipeRefresh.setOnRefreshListener { onRefresh() }
+        swipeRefresh.setOnRefreshListener { mPresenter.fetchNewsFeed() }
 
         val layoutManager = LinearLayoutManager(context)
         recyclerView.layoutManager = layoutManager
@@ -71,7 +87,7 @@ class NewsFeedFragment : Fragment(), NewsFeedContract.View, PopupMenu.OnMenuItem
         recyclerView.addItemDecoration(dividerItemDecoration)
         recyclerView.setHasFixedSize(true)
 
-        retryButton.setOnClickListener { onRetry() }
+        retryButton.setOnClickListener { mPresenter.retryFetching() }
     }
 
     override fun onResume() {
@@ -129,6 +145,8 @@ class NewsFeedFragment : Fragment(), NewsFeedContract.View, PopupMenu.OnMenuItem
             mCurrentPopupMenu?.menu?.getItem(0)?.setTitle(R.string.news_feed_hide_content_layout_popup)
         }
         mCurrentPopupMenu?.show()
+
+        mAppBar?.setExpanded(mIsAppBarCollapsed)
     }
 
     override fun dismissNewsItemMenu() {
@@ -157,13 +175,6 @@ class NewsFeedFragment : Fragment(), NewsFeedContract.View, PopupMenu.OnMenuItem
             }
         }
         return false
-    }
-
-    private fun onRefresh() = mPresenter.fetchNewsFeed()
-
-    private fun onRetry() {
-        showLoadingIndicator()
-        mPresenter.fetchNewsFeed()
     }
 
 }
