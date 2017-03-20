@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.util.Log
 import com.arcmaksim.kupchinonews.R
-import com.arcmaksim.kupchinonews.commons.NewsFeedHtmlCleaner
 import com.arcmaksim.kupchinonews.commons.NewsFeedParser
 import com.arcmaksim.kupchinonews.commons.isNetworkAvailable
 import com.squareup.picasso.Picasso
@@ -118,7 +117,7 @@ class NewsFeedPresenter(view: NewsFeedContract.View, context: Context) : NewsFee
             if (it.mImageUrl != "") {
                 it.mImage = Picasso.with(mContext).load(it.mImageUrl).get()
             }
-            it.mDescription = NewsFeedHtmlCleaner.cleanHtml(it.mDescription)
+            //it.mDescription = NewsFeedHtmlCleaner.cleanHtml(it.mDescription)
         }
         return newsFeed
     }

@@ -12,7 +12,9 @@ class ScreenFitImageView : AppCompatImageView {
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val width = MeasureSpec.getSize(widthMeasureSpec)
-        val height = width * drawable.intrinsicHeight / drawable.intrinsicWidth
+        val height = drawable?.let {
+            width * drawable.intrinsicHeight / drawable.intrinsicWidth
+        } ?: 0
         setMeasuredDimension(width, height)
     }
 

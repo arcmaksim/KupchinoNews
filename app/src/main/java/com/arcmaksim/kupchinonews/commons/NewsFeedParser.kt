@@ -22,7 +22,7 @@ class NewsFeedParser {
 
     @Throws(XmlPullParserException::class, IOException::class)
     fun parse(inputStream: InputStream): ArrayList<NewsItem> {
-        inputStream.use { it ->
+        inputStream.use {
             val parser = Xml.newPullParser()
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false)
             parser.setInput(inputStream, null)
@@ -57,7 +57,8 @@ class NewsFeedParser {
                 mLinkTag -> link = readTag(parser, mLinkTag)
                 mDescriptionTag -> {
                     description = readTag(parser, mDescriptionTag)
-                    imageUrl = extractImageUrl(description)
+                    imageUrl = ""
+                    //imageUrl = extractImageUrl(description)
                 }
                 mPublicationDateTag -> {
                     val tagContent = readTag(parser, mPublicationDateTag)
